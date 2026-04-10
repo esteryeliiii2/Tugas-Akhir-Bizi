@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Login - Bizi</title>
@@ -23,7 +24,7 @@
             height: 100vh;
         }
 
-       .left {
+        .left {
             flex: 1;
             background: linear-gradient(180deg, #0176F4 0%, #01C3F4 140%);
             border-radius: 16px;
@@ -34,7 +35,7 @@
             align-items: center;
         }
 
-        .left-content{
+        .left-content {
             width: 100%;
             display: flex;
             justify-content: center;
@@ -56,13 +57,13 @@
             width: 420px;
         }
 
-       .logo {
+        .logo {
             text-align: center;
             margin-bottom: 10px;
         }
 
         .logo img {
-            width: 60px;   
+            width: 60px;
             height: auto;
         }
 
@@ -131,7 +132,7 @@
         .input-all {
             margin-bottom: 40px;
         }
-         
+
         input {
             width: 100%;
             padding: 12px;
@@ -143,8 +144,8 @@
         }
 
         input:focus {
-            border: 1px solid #9c9c9c; 
-            outline: none; 
+            border: 1px solid #9c9c9c;
+            outline: none;
         }
 
         .forgot {
@@ -155,7 +156,7 @@
         }
 
         .forgot a {
-            text-decoration: none;   
+            text-decoration: none;
             color: #0176F4;
         }
 
@@ -168,10 +169,13 @@
             flex: 1;
             padding: 12px;
             border-radius: 16px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
             border: none;
             background: #121212;
             color: #FCFCFC;
-            font-weight: 500;
+            font-weight: 400;
             font-size: 14px;
             cursor: pointer;
         }
@@ -199,91 +203,94 @@
                 flex: 1;
             }
         }
-
     </style>
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <div class="left">
-        <div class="left-content">
-            <img src="{{ asset('images/tampilan.png') }}" alt="Tampilan">
+        <div class="left">
+            <div class="left-content">
+                <img src="{{ asset('images/tampilan.png') }}" alt="Tampilan">
+            </div>
         </div>
-    </div>
 
-    <div class="right">
-        <div class="login-box">
+        <div class="right">
+            <div class="login-box">
 
-            <div class="logo">
-                <img src="{{ asset('images/LogoBizi.png') }}" alt="Logo Bizi">
-            </div>
-
-            <h1>Selamat datang di Bizi</h1>
-            <div class="subtitle">Silakan masuk sebagai :</div>
-
-            <div class="role-container">
-                <button type="button" class="role-btn active">
-                    <iconify-icon icon="ph:chalkboard-teacher" width="18"></iconify-icon>
-                    Guru BK
-                </button>
-                <button type="button" class="role-btn">
-                    <iconify-icon icon="ph:chalkboard-teacher" width="18"></iconify-icon>
-                    Guru Umum
-                </button>
-                <button type="button" class="role-btn">
-                    <iconify-icon icon="hugeicons:students" width="18"></iconify-icon>
-                    Siswa
-                </button>
-            </div>
-
-            <div class="line-image">
-                <img src="{{ asset('images/line.png') }}" alt="Line">
-            </div>
-
-            <form method="POST" action="#">
-                @csrf
-
-                <div class="input-all">
-                    <div class="input-group">
-                        <label>NIS</label>
-                        <input type="text" name="nis" placeholder="Masukkan NIS" autocomplete="off">
-                    </div>
-
-                    <div class="input-group" style="margin-bottom: 16px;">
-                        <label>KATA SANDI</label>
-                        <input type="password" name="password" placeholder="Masukkan kata sandi" autocomplete="new-password">
-                    </div>
-
-                    <div class="forgot">
-                        <a href="#">Lupa kata sandi?</a>
-                    </div>
+                <div class="logo">
+                    <img src="{{ asset('images/LogoBizi.png') }}" alt="Logo Bizi">
                 </div>
 
-                <div class="btn-group">
-                    <button type="submit" class="btn-login">Masuk</button>
-                    <a href="{{ route('register') }}" class="btn-register">
-                        Belum Punya Akun
-                    </a>
+                <h1>Selamat datang di Bizi</h1>
+                <div class="subtitle">Silakan masuk sebagai :</div>
+
+                <div class="role-container">
+                    <button type="button" class="role-btn active">
+                        <iconify-icon icon="ph:chalkboard-teacher" width="18"></iconify-icon>
+                        Guru BK
+                    </button>
+                    <button type="button" class="role-btn">
+                        <iconify-icon icon="ph:chalkboard-teacher" width="18"></iconify-icon>
+                        Guru Umum
+                    </button>
+                    <button type="button" class="role-btn">
+                        <iconify-icon icon="hugeicons:students" width="18"></iconify-icon>
+                        Siswa
+                    </button>
                 </div>
 
-            </form>
+                <div class="line-image">
+                    <img src="{{ asset('images/line.png') }}" alt="Line">
+                </div>
 
+                <form method="POST" action="#">
+                    @csrf
+
+                    <div class="input-all">
+                        <div class="input-group">
+                            <label>NIS</label>
+                            <input type="text" name="nis" placeholder="Masukkan NIS" autocomplete="off">
+                        </div>
+
+                        <div class="input-group" style="margin-bottom: 16px;">
+                            <label>KATA SANDI</label>
+                            <input type="password" name="password" placeholder="Masukkan kata sandi" autocomplete="new-password">
+                        </div>
+
+                        <div class="forgot">
+                            <a href="#">Lupa kata sandi?</a>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="{{ route('dashboard-siswa') }}" class="btn-login">
+                            Masuk
+                        </a>
+                        <a href="{{ route('register') }}" class="btn-register">
+                            Belum Punya Akun
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
         </div>
+
     </div>
 
-</div>
+    <script>
+        const buttons = document.querySelectorAll('.role-btn');
 
-<script>
-    const buttons = document.querySelectorAll('.role-btn');
-
-    buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            buttons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>

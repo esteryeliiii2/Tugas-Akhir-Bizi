@@ -19,7 +19,6 @@
 
 </div>
 
-
 <div class="izin-layout">
 
     <div class="izin-form">

@@ -32,7 +32,7 @@
                         Beranda Pengajuan
                     </a>
 
-                    <a href="/status-izin" class="{{ request()->is('status-izin') ? 'active' : '' }}">
+                    <a href="/status-izin" class="{{ request()->is('status-izin*') ? 'active' : '' }}">
                         <iconify-icon icon="ph:notification" width="18"></iconify-icon>
                         Status Perizinan
                     </a>

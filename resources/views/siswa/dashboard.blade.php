@@ -113,10 +113,8 @@
 </div>
 
 
-<!-- ✅ STATE ADA DATA -->
 <div id="filledState" style="display: none;">
 
-    <!-- CARD -->
     <div class="izin-card">
 
         <div class="izin-header">
@@ -144,7 +142,9 @@
             </div>
 
             <div class="izin-actions">
-                <button class="izin-detail">Lihat Detail</button>
+                <a href="/status-izin/1" class="izin-detail">
+                    Lihat Detail
+                </a>
                 <iconify-icon icon="mdi:dots-vertical"></iconify-icon>
             </div>
 
@@ -152,7 +152,7 @@
 
     </div>
 
-    <!-- STEP DI LUAR CARD -->
+    <!-- step -->
     <div class="izin-step">
 
         <div class="step-item">
