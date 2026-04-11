@@ -2,46 +2,29 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\C_Siswa;
+use App\Http\Controllers\C_Guru;
 
-Route::get('/', function () {
-    return view('auth.login');
+//siswa
+Route::middleware(['auth', 'role:siswa'])->group(function () {
+    Route::get('/', [C_Siswa::class, 'index']);
+    Route::get('/dashboard', [C_Siswa::class, 'index'])->name('dashboard-siswa');
+
+    Route::get('/ajukan-izin', [C_Siswa::class, 'ajukanIzin'])->name('ajukan_izin-siswa');
+    Route::post('/ajukan-izin', [C_Siswa::class, 'storeSession'])->name('store_session-siswa');
+
+    Route::get('/guru-approve', [C_Siswa::class, 'guruApprove'])->name('guru_approve-siswa');
+    Route::get('/status-izin', [C_Siswa::class, 'statusIzin'])->name('status_izin-siswa');
+    Route::post('/guru-approve', [C_Siswa::class, 'store'])->name('store-siswa');
 });
 
-// siswa
-Route::get('/dashboard', function () {
-    return view('siswa.dashboard', ['role' => 'siswa']);
-})->name('dashboard-siswa');
-
-Route::get('/ajukan-izin', function () {
-    return view('siswa.ajukan-izin');
-})->name('ajukan-izin');
-
-Route::get('/guru-approve', function () {
-    return view('siswa.guru-approve');
-})->name('guru-approve');
-
-Route::get('/status-izin', function () {
-    return view('siswa.status-izin', ['izin' => false]);
+//guru
+Route::middleware(['auth', 'role:guru umum,guru bk'])->group(function () {
+    Route::get('/', [C_Guru::class, 'index']);
+    Route::get('/dashboard-guru', [C_Guru::class, 'index'])->name('dashboard-guru');
+    Route::get('/daftar-pengajuan', [C_Guru::class, 'daftarPengajuan'])->name('daftar-pengajuan-guru');
+    Route::get('/riwayat-izin-guru', [C_Guru::class, 'riwayatIzinGuru'])->name('riwayat-izin-guru');
 });
-
-Route::get('/status-izin/{id}', function ($id) {
-    return view('siswa.status-izin', ['izin' => true]);
-});
-
-// guru
-Route::get('/dashboard-guru', function () {
-    return view('guru.dashboard-guru');
-})->name('dashboard-guru');
-
-Route::get('/daftar-pengajuan', function () {
-    return view('guru.daftar-pengajuan');
-})->name('daftar-pengajuan');
-
-Route::get('/riwayat-izin-guru', function () {
-    return view('guru.riwayat-izin-guru');
-})->name('riwayat-izin-guru');
-
-
 
 Route::middleware('auth')->group(function () {
 

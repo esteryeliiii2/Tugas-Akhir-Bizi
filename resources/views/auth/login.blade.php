@@ -245,7 +245,7 @@
                     <img src="{{ asset('images/line.png') }}" alt="Line">
                 </div>
 
-                <form method="POST" action="#">
+                <form method="POST" action="{{ route('login') }}">
                     @csrf
 
                     <div class="input-all">
@@ -265,9 +265,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <a href="{{ route('dashboard-siswa') }}" class="btn-login">
-                            Masuk
-                        </a>
+                        <button type="submit" class="btn-login">Masuk</button>
                         <a href="{{ route('register') }}" class="btn-register">
                             Belum Punya Akun
                         </a>

@@ -5,7 +5,7 @@
 <div class="topbar">
 
     <div>
-        <div class="greeting">Halo, Nicholas 👋</div>
+        <div class="greeting">Halo, {{ $user->nama ? $user->nama : 'Nicholas' }} 👋</div>
         <div class="title">Mau mengajukan izin hari ini?</div>
     </div>
 
@@ -35,7 +35,7 @@
 
 <div class="cards">
 
-    <a href="{{ route('ajukan-izin') }}" class="card">
+    <a href="{{ route('ajukan_izin-siswa') }}" class="card">
         <div class="card-top">
             <div class="card-icon">
                 <iconify-icon icon="hugeicons:file-upload" width="20"></iconify-icon>
@@ -106,7 +106,7 @@
         Ajukan izin melalui formulir untuk memulai proses perizinan.
     </div>
 
-    <a href="{{ route('ajukan-izin') }}" class="empty-btn">
+    <a href="{{ route('ajukan_izin-siswa') }}" class="empty-btn">
         Ajukan Izin
     </a>
 

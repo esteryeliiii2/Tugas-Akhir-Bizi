@@ -30,21 +30,37 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'min:6'], //'confirmed kalo pake pw confirmation
+            'nis' => ['nullable', 'string', 'max:30', 'unique:'.User::class],
+            'nip' => ['nullable', 'string', 'max:30', 'unique:'.User::class],
         ]);
+        
+        if (!$request->nis && !$request->nip) {
+            return back()->withErrors([
+                'nis' => 'Isi NIS atau NIP',
+            ]);
+        }
+
+        $jabatan = $request->nis ? 'siswa' : 'guru umum';
 
         $user = User::create([
-            'name' => $request->name,
+            'nama' => $request->nama,
+            'nis' => $request->nis,
+            'nip' => $request->nip,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'jabatan' => $jabatan,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        if ($user == 'siswa') {
+            return redirect(route('dashboard-siswa', absolute: false));
+        } else {
+            return redirect(route('dashboard-guru', absolute: false));
+        }
     }
 }

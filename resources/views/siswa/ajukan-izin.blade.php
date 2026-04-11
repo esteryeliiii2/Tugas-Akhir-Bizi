@@ -24,104 +24,115 @@
     <div class="izin-form">
 
         <!-- DATA SISWA -->
-        <div class="form-card">
+        <form action="{{ route('store_session-siswa') }}" method="POST">
+            @csrf
+            
+            <div class="form-card">
 
-            <div class="card-header-box">
-                <span class="card-number">01.</span>
-                <span class="card-title">Data Siswa</span>
-            </div>
-            <div class="form-group">
-                <label>NAMA</label>
-                <input type="text" placeholder="Masukkan nama lengkap">
-            </div>
-
-            <div class="form-row">
-
+                <div class="card-header-box">
+                    <span class="card-number">01.</span>
+                    <span class="card-title">Data Siswa</span>
+                </div>
                 <div class="form-group">
-                    <label>NO. URUT</label>
-                    <select>
-                        <option>Pilih no. urut</option>
-                    </select>
+                    <label>NAMA</label>
+                    <input type="text" name="nama" placeholder="Masukkan nama lengkap">
                 </div>
 
-                <div class="form-group">
-                    <label>KELAS</label>
-                    <select>
-                        <option>Pilih kelas</option>
-                    </select>
-                </div>
+                <div class="form-row">
 
-                <div class="form-group">
-                    <label>JURUSAN</label>
-                    <select>
-                        <option>Pilih jurusan</option>
-                    </select>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- DETAIL IZIN -->
-        <div class="form-card">
-
-            <div class="card-header-box">
-                <span class="card-number">02.</span>
-                <span class="card-title">Detail Izin</span>
-            </div>
-
-            <div class="toggle-group">
-                <label class="toggle-item">
-                    <input type="radio" name="kembali" checked>
-                    <span class="custom-radio"></span>
-                    Kembali ke sekolah
-                </label>
-                <label class="toggle-item">
-                    <input type="radio" name="kembali">
-                    <span class="custom-radio"></span>
-                    Tidak kembali
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label>KEPERLUAN</label>
-                <textarea placeholder="Sebutkan keperluan izin..."></textarea>
-            </div>
-
-            <div class="form-row">
-
-                <div class="form-group">
-                    <label>JAM MULAI IZIN</label>
-                    <div class="time-input">
-                        <input type="time">
-                        <iconify-icon icon="solar:clock-circle-linear" class="time-icon"></iconify-icon>
+                    <div class="form-group">
+                        <label>NO. URUT</label>
+                        <select name="no_presensi">
+                            <option value="">Pilih no. urut</option>
+                            @for ($i = 1; $i <= 36; $i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label>JAM SELESAI IZIN</label>
-                    <div class="time-input">
-                        <input type="time">
-                        <iconify-icon icon="solar:clock-circle-linear" class="time-icon"></iconify-icon>
+                    <div class="form-group">
+                        <label>KELAS</label>
+                        <select name="kelas" id="kelas">
+                            <option value="">Pilih kelas</option>
+                            <option value="10">X</option>
+                            <option value="11">XI</option>
+                            <option value="12">XII</option>
+                            <option value="13">XIII</option>
+                        </select>
                     </div>
+
+                    <div class="form-group">
+                        <label>JURUSAN</label>
+                        <select name="jurusan" id="jurusan">
+                            <option>Pilih jurusan</option>
+                        </select>
+                    </div>
+
                 </div>
 
             </div>
 
-        </div>
+            <!-- DETAIL IZIN -->
+            <div class="form-card">
 
-        <div class="form-actions">
-            <button class="btn-cancel">
-                Batalkan
-            </button>
+                <div class="card-header-box">
+                    <span class="card-number">02.</span>
+                    <span class="card-title">Detail Izin</span>
+                </div>
 
-            <form action="{{ route('guru-approve') }}" method="GET">
-                <button type="submit" class="btn-submit">
-                    Lanjutkan Pengajuan
-                    <iconify-icon icon="iconamoon:arrow-right-2-light"></iconify-icon>
+                <div class="toggle-group">
+                    <label class="toggle-item">
+                        <input type="radio" name="kembali" value="ya" checked>
+                        <span class="custom-radio"></span>
+                        Kembali ke sekolah
+                    </label>
+                    <label class="toggle-item">
+                        <input type="radio" name="kembali" value="tidak">
+                        <span class="custom-radio"></span>
+                        Tidak kembali
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>KEPERLUAN</label>
+                    <textarea placeholder="Sebutkan keperluan izin..." name="keperluan"></textarea>
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label>JAM MULAI IZIN</label>
+                        <div class="time-input">
+                            <input type="time" name="jam_mulai">
+                            <iconify-icon icon="solar:clock-circle-linear" class="time-icon"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>JAM SELESAI IZIN</label>
+                        <div class="time-input">
+                            <input type="time" name="jam_selesai">
+                            <iconify-icon icon="solar:clock-circle-linear" class="time-icon"></iconify-icon>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-cancel" type="button">
+                    Batalkan
                 </button>
-            </form>
-        </div>
+
+                {{-- <form action="{{ route('guru-approve') }}" method="GET"> --}}
+                    <button type="submit" class="btn-submit">
+                        Lanjutkan Pengajuan
+                        <iconify-icon icon="iconamoon:arrow-right-2-light"></iconify-icon>
+                    </button>
+                {{-- </form> --}}
+            </div>
+        </form>
 
     </div>
 
@@ -164,4 +175,31 @@
 
 </div>
 
+<script>
+    const jurusanMap = {
+        10: ['TKL', 'TE', 'TO', 'TKP', 'KPBS', 'TPFL', 'PPLG'],
+        11: ['TITL', 'TEK', 'TME', 'TKR', 'KGS', 'KJIJ', 'TFLM', 'SIJA'],
+        12: ['TITL', 'TEK', 'TME', 'TKR', 'KGS', 'KJIJ', 'TFLM', 'SIJA'],
+        13: ['TITL', 'TEK', 'TME', 'TKR', 'KGS', 'KJIJ', 'TFLM', 'SIJA']
+    };
+
+    const kelasSelect = document.getElementById('kelas');
+    const jurusanSelect = document.getElementById('jurusan');
+
+    kelasSelect.addEventListener('change', function () {
+        const selectedKelas = this.value;
+
+        // reset jurusan
+        jurusanSelect.innerHTML = '<option value="">Pilih jurusan</option>';
+
+        if (jurusanMap[selectedKelas]) {
+            jurusanMap[selectedKelas].forEach(jurusan => {
+                const option = document.createElement('option');
+                option.value = jurusan;
+                option.textContent = jurusan;
+                jurusanSelect.appendChild(option);
+            });
+        }
+    });
+</script>
 @endsection

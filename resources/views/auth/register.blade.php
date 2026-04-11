@@ -216,13 +216,13 @@
             <h1>Selamat datang di Bizi</h1>
             <div class="subtitle">Buat akun terlebih dahulu</div>
 
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('register') }}">
                 @csrf
 
                 <div class="input-all">
                     <div class="input-group">
                         <label>NAMA</label>
-                        <input type="text" name="nis" placeholder="Masukkan nama lengkap" autocomplete="off">
+                        <input type="text" name="nama" placeholder="Masukkan nama lengkap" autocomplete="off">
                     </div>
 
                     <div class="input-group">
@@ -232,7 +232,7 @@
 
                     <div class="input-group">
                         <label>EMAIL</label>
-                        <input type="text" name="nis" placeholder="Masukkan email" autocomplete="off">
+                        <input type="text" name="email" placeholder="Masukkan email" autocomplete="off">
                     </div>
 
                     <div class="input-group" style="margin-bottom: 0px;">

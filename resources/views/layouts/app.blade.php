@@ -65,17 +65,25 @@
 
                 <div class="user-card">
 
-                    <div class="avatar">NR</div>
+                    <div class="avatar">{{ $initials ? $initials : 'NR' }}</div>
 
                     <div class="user-info">
 
                         <div class="user-name">
-                            Nicholas Daniel Raditya
+                            {{ $user->nama ? $user->nama : 'Nicholas Daniel Raditya' }}
                         </div>
 
                         <div class="user-meta">
-                            <span class="badge">SISWA</span>
-                            <span class="nis">224119999</span>
+                            <span class="badge">{{ $user->jabatan ? strtoupper($user->jabatan) : 'SISWA' }}</span>
+                            <span class="nis">
+                                @if($user->nis)
+                                    {{ $user->nis }}
+                                @elseif($user->nip)
+                                    {{ $user->nip }}
+                                @else
+                                    224111999
+                                @endif
+                            </span>
                         </div>
 
                     </div>

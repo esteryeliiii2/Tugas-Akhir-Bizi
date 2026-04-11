@@ -27,7 +27,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'nis' => ['nullable', 'string'],
+            'nip' => ['nullable', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -41,11 +42,22 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $noind = $this->nis ? 'nis' : 'nip';
+
+        if (!$this->nis && !$this->nip) {
+            throw ValidationException::withMessages([
+                'nis' => 'Isi NIS atau NIP',
+            ]);
+        }
+
+        if (! Auth::attempt([
+                $noind => $this->input($noind),
+                'password' => $this->password,
+            ], $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                $noind => trans('auth.failed'),
             ]);
         }
 
@@ -68,7 +80,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'nis' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -80,6 +92,8 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        $noind = $this->nis ? $this->nis : $this->nip;
+
+        return Str::transliterate(Str::lower($noind).'|'.$this->ip());
     }
 }
