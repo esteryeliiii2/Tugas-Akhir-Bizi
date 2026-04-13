@@ -183,7 +183,7 @@
         .btn-register {
             flex: 1;
             padding: 12px;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #E8E8E8;
             color: #121212;
             font-size: 14px;
@@ -250,8 +250,8 @@
 
                     <div class="input-all">
                         <div class="input-group">
-                            <label>NIS</label>
-                            <input type="text" name="nis" placeholder="Masukkan NIS" autocomplete="off">
+                            <label>NIP</label>
+                            <input type="text" name="nip" placeholder="Masukkan NIP" autocomplete="off">
                         </div>
 
                         <div class="input-group" style="margin-bottom: 16px;">
@@ -267,9 +267,6 @@
                     <div class="btn-group">
                         <a href="{{ route('dashboard-siswa') }}" class="btn-login">
                             Masuk
-                        </a>
-                        <a href="{{ route('register') }}" class="btn-register">
-                            Belum Punya Akun
                         </a>
                     </div>
 

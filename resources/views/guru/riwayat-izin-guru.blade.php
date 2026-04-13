@@ -33,6 +33,33 @@ $dataIzin = [
         <iconify-icon icon="mynaui:search" class="search-icon"></iconify-icon>
         <input type="text" id="searchInput" placeholder="Cari riwayat perizinan..." />
     </div>
+
+    <div class="filter-box">
+
+        <div class="dropdown">
+            <div class="dropdown-btn">
+                Semua Status
+                <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </div>
+            <div class="dropdown-content">
+                <div>Semua Status</div>
+                <div>Disetujui</div>
+                <div>Ditolak</div>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-btn">
+                7 hari terakhir
+                <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </div>
+            <div class="dropdown-content">
+                <div>7 hari terakhir</div>
+                <div>30 hari terakhir</div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <div class="section-item" data-status="disetujui">
@@ -310,43 +337,68 @@ $dataIzin = [
 @endsection
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
 
-        function toggleCard(el) {
-            const index = el.getAttribute('data-index');
+    function toggleCard(el) {
+        const index = el.getAttribute('data-index');
 
-            const card = document.getElementById('card-' + index);
-            const arrow = document.getElementById('arrow-' + index);
+        const card = document.getElementById('card-' + index);
+        const arrow = document.getElementById('arrow-' + index);
 
-            const isHidden = window.getComputedStyle(card).display === "none";
+        const isHidden = window.getComputedStyle(card).display === "none";
 
-            if (isHidden) {
-                card.style.display = "block";
-                arrow.style.transform = "rotate(180deg)";
-            } else {
-                card.style.display = "none";
-                arrow.style.transform = "rotate(0deg)";
-            }
+        if (isHidden) {
+            card.style.display = "block";
+            arrow.style.transform = "rotate(180deg)";
+        } else {
+            card.style.display = "none";
+            arrow.style.transform = "rotate(0deg)";
         }
+    }
 
-        window.toggleCard = toggleCard; // biar bisa dipanggil dari HTML
+    window.toggleCard = toggleCard;
 
-        const searchInput = document.getElementById('searchInput');
-        const cards = document.querySelectorAll('.card-izinn');
+    const searchInput = document.getElementById('searchInput');
+    const cards = document.querySelectorAll('.card-izinn');
 
-        searchInput.addEventListener('keyup', function() {
-            const keyword = this.value.toLowerCase();
+    searchInput.addEventListener('keyup', function() {
+        const keyword = this.value.toLowerCase();
 
-            cards.forEach(card => {
-                const text = card.innerText.toLowerCase();
+        cards.forEach(card => {
+            const text = card.innerText.toLowerCase();
 
-                if (text.includes(keyword)) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            if (text.includes(keyword)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    document.querySelectorAll(".dropdown").forEach(drop => {
+        const btn = drop.querySelector(".dropdown-btn");
+        const items = drop.querySelectorAll(".dropdown-content div");
+
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
+            drop.classList.toggle("active");
         });
 
+        items.forEach(item => {
+            item.addEventListener("click", () => {
+                btn.firstChild.textContent = item.innerText + " ";
+                drop.classList.remove("active");
+            });
+        });
     });
+
+    // klik luar = close
+    document.addEventListener("click", function(e) {
+        if (!e.target.closest(".dropdown")) {
+            document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
+        }
+    });
+
+});
 </script>
