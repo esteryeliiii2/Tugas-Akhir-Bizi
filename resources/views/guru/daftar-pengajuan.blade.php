@@ -46,7 +46,7 @@ $dataIzin = [
     @foreach($dataIzin as $index => $izin)
     <div class="card-izinn">
 
-        <div class="card-header" data-index="menunggu-{{ $index }}" onclick="toggleCard(this)">
+        <div class="card-header-izin" data-index="menunggu-{{ $index }}" onclick="toggleCard(this)">
 
             <div class="left-header">
 
@@ -66,8 +66,8 @@ $dataIzin = [
             </div>
 
             <div class="action">
-                <button class="btn-tolak">Tolak ✕</button>
-                <button class="btn-setuju">Setujui ✓</button>
+                <button class="btn-tolak" onclick="event.stopPropagation(); openModalTolak()">Tolak ✕</button>
+                <button class="btn-setuju" onclick="event.stopPropagation(); openModalSetuju()">Setujui ✓</button>
                 <span class="arrow" id="arrow-menunggu-{{ $index }}">⌄</span>
             </div>
         </div>
@@ -182,7 +182,7 @@ $dataIzin = [
     @foreach($dataIzin as $index => $izin)
     <div class="card-izinn">
 
-        <div class="card-header" data-index="izin-{{ $index }}" onclick="toggleCard(this)">
+        <div class="card-header-izin" data-index="izin-{{ $index }}" onclick="toggleCard(this)">
 
             <div class="left-header">
 
@@ -318,7 +318,7 @@ $dataIzin = [
     @foreach($dataIzin as $index => $izin)
     <div class="card-izinn">
 
-        <div class="card-header" data-index="ditolak-{{ $index }}" onclick="toggleCard(this)">
+        <div class="card-header-izin" data-index="ditolak-{{ $index }}" onclick="toggleCard(this)">
 
             <div class="left-header">
 
@@ -443,6 +443,108 @@ $dataIzin = [
 
 @endif
 
+<!-- modal -->
+<div id="modal-tolak" class="modal-overlay" style="display:none;" onclick="closeModalTolak()">
+
+    <div class="modal-box" onclick="event.stopPropagation()">
+
+        <div class="modal-icon">
+            <div class="icon-line">
+                <div class="line-red"></div>
+
+                <div class="icon-box red">
+                    <iconify-icon icon="iconoir:cancel"></iconify-icon>
+                </div>
+
+                <div class="line-red"></div>
+            </div>
+        </div>
+
+        <h2 class="modal-title">Tolak Pengajuan Izin?</h2>
+
+        <p class="modal-desc">
+            Pengajuan izin akan ditolak dan tidak dapat diproses lebih lanjut.
+            Siswa dapat mengajukan kembali dengan data yang sesuai.
+        </p>
+
+        <div class="modal-actions">
+            <button class="btn-kembali" onclick="closeModalTolak()">Batal</button>
+            <button class="btn-submit" onclick="tolakIzin()" style="background:#F24141; color:#fff;">
+                Tolak Perizinan
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div id="modal-setuju" class="modal-overlay" style="display:none;" onclick="closeModalSetuju()">
+
+    <div class="modal-box" onclick="event.stopPropagation()">
+
+        <div class="modal-icon">
+            <div class="icon-line">
+                <div class="line-green"></div>
+
+                <div class="icon-box-green">
+                    <iconify-icon icon="uim:check"></iconify-icon>
+                </div>
+
+                <div class="line-green"></div>
+            </div>
+        </div>
+
+        <h2 class="modal-title">Setujui Pengajuan Izin?</h2>
+
+        <p class="modal-desc">
+            Pastikan data yang diajukan sudah sesuai sebelum memberikan persetujuan.
+        </p>
+
+        <div class="modal-actions">
+            <button class="btn-kembali" onclick="closeModalSetuju()">Batal</button>
+            <button class="btn-submit" onclick="setujuiIzin()" style="background:#121212; border: 1px solid #3B3B3B; color:#fff;">
+                Setujui Perizinan
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div id="modal-catatan" class="modal-overlay" style="display:none;" onclick="closeModalCatatan()">
+
+    <div class="modal-box" onclick="event.stopPropagation()">
+
+        <div class="modal-icon">
+            <div class="icon-line">
+                <div class="line-red"></div>
+
+                <div class="icon-box red">
+                    <iconify-icon icon="iconoir:cancel"></iconify-icon>
+                </div>
+
+                <div class="line-red"></div>
+            </div>
+        </div>
+
+        <h2 class="modal-title">Catatan Alasan Penolakan</h2>
+
+        <p class="modal-desc" style="margin-bottom: 24px;">
+            Jelaskan alasan penolakan pengajuan izin agar siswa dapat memahami dan memperbaiki pengajuan berikutnya.
+        </p>
+
+        <textarea id="catatan-text"
+            placeholder="Tulis alasan penolakan..."
+            style="width:100%; height:100px; margin-top:12px; margin-bottom: 40px;padding:10px; border-radius:8px;"></textarea>
+
+        <div class="modal-actions">
+            <button class="btn-kembali" onclick="closeModalCatatan()">Batalkan</button>
+            <button class="btn-submit" onclick="submitTolak()" style="background:#F24141; color:#fff;">
+                Tolak
+            </button>
+        </div>
+
+    </div>
+</div>
+
 @endsection
 
 <script>
@@ -465,7 +567,7 @@ $dataIzin = [
             }
         }
 
-        window.toggleCard = toggleCard; // biar bisa dipanggil dari HTML
+        window.toggleCard = toggleCard;
 
         const tabs = document.querySelectorAll('.tab');
         const items = document.querySelectorAll('.section-item');
@@ -491,5 +593,58 @@ $dataIzin = [
             });
         });
 
+        function openModalTolak() {
+            document.getElementById("modal-tolak").style.display = "flex";
+        }
+
+        function closeModalTolak() {
+            document.getElementById("modal-tolak").style.display = "none";
+        }
+
+        function tolakIzin() {
+            closeModalTolak();
+            document.getElementById("modal-catatan").style.display = "flex";
+        }
+
+        function openModalSetuju() {
+            document.getElementById("modal-setuju").style.display = "flex";
+        }
+
+        function closeModalSetuju() {
+            document.getElementById("modal-setuju").style.display = "none";
+        }
+
+        function setujuiIzin() {
+            alert("Pengajuan disetujui!");
+            closeModalSetuju();
+        }
+
+        function closeModalCatatan() {
+            document.getElementById("modal-catatan").style.display = "none";
+        }
+
+        function submitTolak() {
+            const catatan = document.getElementById("catatan-text").value;
+
+            if (catatan.trim() === "") {
+                alert("Alasan penolakan harus diisi!");
+                return;
+            }
+
+            alert("Pengajuan ditolak dengan alasan:\n" + catatan);
+
+            closeModalCatatan();
+        }
+
+        window.openModalTolak = openModalTolak;
+        window.closeModalTolak = closeModalTolak;
+        window.tolakIzin = tolakIzin;
+
+        window.openModalSetuju = openModalSetuju;
+        window.closeModalSetuju = closeModalSetuju;
+        window.setujuiIzin = setujuiIzin;
+
+        window.closeModalCatatan = closeModalCatatan;
+        window.submitTolak = submitTolak;
     });
 </script>

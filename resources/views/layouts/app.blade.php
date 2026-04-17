@@ -37,7 +37,7 @@
                         Status Perizinan
                     </a>
 
-                    <a href="#">
+                    <a href="/riwayat-izin-siswa" class="{{ request()->is('riwayat-izin-siswa') ? 'active' : '' }}">
                         <iconify-icon icon="solar:history-linear" width="18"></iconify-icon>
                         Riwayat Izin
                     </a>

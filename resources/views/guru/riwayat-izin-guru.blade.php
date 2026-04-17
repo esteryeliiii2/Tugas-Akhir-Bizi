@@ -73,7 +73,7 @@ $dataIzin = [
     @foreach($dataIzin as $index => $izin)
     <div class="card-izinn">
 
-        <div class="card-header" data-index="izin-{{ $index }}" onclick="toggleCard(this)">
+        <div class="card-header-izin" data-index="izin-{{ $index }}" onclick="toggleCard(this)">
 
             <div class="left-header">
 
@@ -209,7 +209,7 @@ $dataIzin = [
     @foreach($dataIzin as $index => $izin)
     <div class="card-izinn">
 
-        <div class="card-header" data-index="ditolak-{{ $index }}" onclick="toggleCard(this)">
+        <div class="card-header-izin" data-index="ditolak-{{ $index }}" onclick="toggleCard(this)">
 
             <div class="left-header">
 

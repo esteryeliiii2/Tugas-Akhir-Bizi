@@ -22,11 +22,15 @@ Route::get('/guru-approve', function () {
 
 Route::get('/status-izin', function () {
     return view('siswa.status-izin', ['izin' => false]);
-});
+})->name('status-izin');
 
 Route::get('/status-izin/{id}', function ($id) {
     return view('siswa.status-izin', ['izin' => true]);
-});
+})->name('status-izin.detail');
+
+Route::get('/riwayat-izin-siswa', function () {
+    return view('siswa.riwayat-izin-siswa');
+})->name('riwayat-izin-siswa');
 
 // guru
 Route::get('/dashboard-guru', function () {

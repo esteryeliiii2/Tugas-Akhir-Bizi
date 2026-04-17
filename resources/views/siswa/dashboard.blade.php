@@ -52,7 +52,7 @@
         </div>
     </a>
 
-    <div class="card">
+    <a href="{{ route('status-izin') }}" class="card">
         <div class="card-top">
             <div class="card-icon">
                 <iconify-icon icon="ph:notification" width="20"></iconify-icon>
@@ -67,10 +67,9 @@
                 Lihat apakah pengajuan izin sedang diproses, disetujui, atau ditolak.
             </div>
         </div>
+    </a>
 
-    </div>
-
-    <div class="card">
+    <a href="{{ route('riwayat-izin-siswa') }}" class="card">
         <div class="card-top">
             <div class="card-icon">
                 <iconify-icon icon="solar:history-linear" width="20"></iconify-icon>
@@ -85,8 +84,7 @@
                 Periksa daftar izin yang pernah diajukan beserta statusnya.
             </div>
         </div>
-
-    </div>
+    </a>
 
 </div>
 
