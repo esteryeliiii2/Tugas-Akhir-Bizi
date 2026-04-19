@@ -382,7 +382,6 @@ a.card {
     flex: 3;
 }
 
-/* CARD UTAMA */
 .form-card {
     width: 560px;
     background: #fcfcfc;
@@ -927,8 +926,8 @@ input::placeholder {
     width: 52px;
     height: 52px;
     border-radius: 8px;
-    background: #E1FCEE;
-    border-radius: 1px solid #CBF6E0;
+    background: #e1fcee;
+    border-radius: 1px solid #cbf6e0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -942,7 +941,7 @@ input::placeholder {
 
 .icon-box-green iconify-icon {
     font-size: 24px;
-    color: #1DB366;
+    color: #1db366;
 }
 
 .icon-box.gray iconify-icon {
@@ -988,7 +987,7 @@ input::placeholder {
 
 .line-green {
     flex: 1;
-    border-top: 1px dashed #1DB366;
+    border-top: 1px dashed #1db366;
 }
 
 .line:first-child {
@@ -1821,4 +1820,186 @@ input::placeholder {
     padding: 24px;
     margin-bottom: 24px;
     margin-top: 8px;
+}
+
+.form-row-tutor {
+    width: 290px;
+    background: #fcfcfc;
+    border: 1px solid #ebebeb;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.form-tutor {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.card-image img {
+    width: 100%;
+}
+
+.card-desc-tutor {
+    font-size: 13px;
+    color: #7c7c7c;
+    margin-top: 12px;
+    line-height: 1.5;
+}
+
+.user-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.user-card-link:hover .user-card {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.title-profil {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.ubah-profile{
+    background: #fcfcfc;
+    color: #121212;
+    border: 1px solid #e8e8e8;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-bottom: 6px;
+    margin-right: 4px;
+}
+
+.hapus-profile{
+    background: #fcfcfc;
+    color: #CE0000;
+    border: 1px solid #e8e8e8;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-bottom: 6px;
+}
+
+
+.card-profil{
+    flex: 1;
+    border-radius: 16px;
+    gap: 32px;
+    border: 1px solid #ececec;
+    background: #fcfcfc;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profil {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 20px;
+}
+
+.profil-sandi {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+}
+
+.card-avatar {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+}
+
+.text-avatar {
+    width: 100%;
+}
+
+.value-profil {
+    width: 100%;
+    background: #FCFCFC;
+    border: 1px solid #EDEDED;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #121212;
+}
+
+.value-profil-none {
+    width: 100%;
+    background: #f4f4f4;
+    border: 1px solid #e8e8e8;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;;
+}
+
+.avatar-profile {
+    width: 60px;
+    height: 54px;
+    background: #c7e6f5;
+    color: #0a7ac9;
+    font-weight: 600;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profil-action {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-secondary {
+    background: #fcfcfc;
+    border: 1px solid #ededed;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.btn-primary {
+    background: #121212;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.password-group {
+    position: relative;
+    width: 100%;
+}
+
+.input-password {
+    width: 100%;
+    padding: 12px 40px 12px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #888;
 }

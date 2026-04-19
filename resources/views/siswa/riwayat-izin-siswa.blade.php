@@ -300,6 +300,24 @@
     function closePopup() {
         document.getElementById("popup-detail").style.display = "none";
     }
+
+     document.querySelectorAll(".dropdown").forEach(drop => {
+        const btn = drop.querySelector(".dropdown-btn");
+        const items = drop.querySelectorAll(".dropdown-content div");
+
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
+            drop.classList.toggle("active");
+        });
+
+        items.forEach(item => {
+            item.addEventListener("click", () => {
+                btn.firstChild.textContent = item.innerText + " ";
+                drop.classList.remove("active");
+            });
+        });
+    });
 </script>
 
 @endsection
