@@ -923,9 +923,26 @@ input::placeholder {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
+.icon-box-green {
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    background: #E1FCEE;
+    border-radius: 1px solid #CBF6E0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
 .icon-box iconify-icon {
     font-size: 24px;
     color: #0176f4;
+}
+
+.icon-box-green iconify-icon {
+    font-size: 24px;
+    color: #1DB366;
 }
 
 .icon-box.gray iconify-icon {
@@ -967,6 +984,11 @@ input::placeholder {
 .line-red {
     flex: 1;
     border-top: 1px dashed #ce0000;
+}
+
+.line-green {
+    flex: 1;
+    border-top: 1px dashed #1DB366;
 }
 
 .line:first-child {
@@ -1061,6 +1083,11 @@ input::placeholder {
 .izin-icon iconify-icon {
     font-size: 44px;
     color: #fcbd27;
+}
+
+.izin-icon iconify-icon-green {
+    font-size: 44px;
+    color: #1db366;
 }
 
 .izin-date {
@@ -1474,6 +1501,13 @@ input::placeholder {
 }
 
 .card-header {
+    display: block;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.card-header-izin {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1651,12 +1685,15 @@ input::placeholder {
 }
 
 .search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
 }
 
 .search-box {
     position: relative;
-    width: 100%;
+    width: 40%;
 }
 
 .search-icon {
@@ -1669,19 +1706,119 @@ input::placeholder {
 }
 
 .search-box input {
-    width: 40%;
+    width: 100%;
     padding: 12px 16px 12px 42px;
     border-radius: 10px;
     border: 1px solid #ebebeb;
+    background: #fcfcfc;
     font-size: 14px;
-    outline: none;
-    background-color: #fcfcfc;
-    transition: 0.2s;
     color: #7c7c7c;
 }
 
-.search-box input:focus {
-    border-color: #7ABAFF;
-    background-color: #fff;
-    box-shadow: 0 0 0 2px rgba(122, 186, 255, 0.2);
+.filter-box {
+    display: flex;
+    gap: 10px;
+}
+
+.dropdown {
+    position: relative;
+    width: fit-content;
+}
+
+.dropdown-btn {
+    display: flex;
+    width: fit-content;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid #ebebeb;
+    border-radius: 10px;
+    background: #fcfcfc;
+    cursor: pointer;
+    font-size: 14px;
+    color: #7c7c7c;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 110%;
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.dropdown-content div {
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #7c7c7c;
+    background: #fcfcfc;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.dropdown-content div:hover {
+    background: #f5f5f5;
+}
+
+.dropdown.active .dropdown-content {
+    display: block;
+}
+
+.modal-overlay-izin {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(3px);
+
+    z-index: 999;
+}
+
+.modal-box-izin {
+    width: 100%;
+    max-width: 560px;
+
+    max-height: 85vh;
+    overflow-y: auto;
+
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+
+    position: relative;
+}
+
+.modal-box-izin::-webkit-scrollbar {
+    display: none;
+}
+
+.modal-box-izin {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.modal-close-izin {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.form-card-izin {
+    width: 100%;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    margin-top: 8px;
 }

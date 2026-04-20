@@ -172,7 +172,7 @@
             display: block;
             text-align: center;
             text-decoration: none;
-            border: 1px solid #121212;
+            border: none;
             background: #121212;
             color: #FCFCFC;
             font-weight: 400;
@@ -183,7 +183,7 @@
         .btn-register {
             flex: 1;
             padding: 12px;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #E8E8E8;
             color: #121212;
             font-size: 14px;
@@ -227,15 +227,15 @@
                 <div class="subtitle">Silakan masuk sebagai :</div>
 
                 <div class="role-container">
-                    <button type="button" class="role-btn" data-role="guru_bk">
+                    <button type="button" class="role-btn active">
                         <iconify-icon icon="ph:chalkboard-teacher" width="18"></iconify-icon>
                         Guru BK
                     </button>
-                    <button type="button" class="role-btn" data-role="guru_umum">
+                    <button type="button" class="role-btn">
                         <iconify-icon icon="ph:chalkboard-teacher" width="18"></iconify-icon>
                         Guru Umum
                     </button>
-                    <button type="button" class="role-btn active" data-role="siswa">
+                    <button type="button" class="role-btn">
                         <iconify-icon icon="hugeicons:students" width="18"></iconify-icon>
                         Siswa
                     </button>
@@ -245,15 +245,13 @@
                     <img src="{{ asset('images/line.png') }}" alt="Line">
                 </div>
 
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="#">
                     @csrf
 
                     <div class="input-all">
-                        <input type="hidden" name="login_type" id="login_type" value="nis">
-                        <input type="hidden" name="role" id="role" value="siswa">
                         <div class="input-group">
-                            <label id="label-login">NIS</label>
-                            <input type="text" name="login" id="login-input" placeholder="Masukkan NIS" autocomplete="off">
+                            <label>NIP</label>
+                            <input type="text" name="nip" placeholder="Masukkan NIP" autocomplete="off">
                         </div>
 
                         <div class="input-group" style="margin-bottom: 16px;">
@@ -267,9 +265,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button type="submit" class="btn-login">Masuk</button>
-                        <a href="{{ route('register') }}" class="btn-register" id="btn-register">
-                            Belum Punya Akun
+                        <a href="{{ route('dashboard-siswa') }}" class="btn-login">
+                            Masuk
                         </a>
                     </div>
 
@@ -282,36 +279,11 @@
 
     <script>
         const buttons = document.querySelectorAll('.role-btn');
-        const label = document.getElementById('label-login');
-        const input = document.getElementById('login-input');
-        const loginType = document.getElementById('login_type');
 
         buttons.forEach(btn => {
             btn.addEventListener('click', () => {
                 buttons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-
-                const role = btn.getAttribute('data-role');
-
-                if (role === 'siswa') {
-                    label.innerText = 'NIS';
-                    input.placeholder = 'Masukkan NIS';
-                    loginType.value = 'nis';
-                    document.getElementById('role').value = 'siswa';
-                    document.getElementById('btn-register').style.display = 'block';
-                } else {
-                    label.innerText = 'NIP';
-                    input.placeholder = 'Masukkan NIP';
-                    loginType.value = 'nip';
-                    if (role === 'guru_bk') {
-                        document.getElementById('role').value = 'guru bk';
-                    } else {
-                        document.getElementById('role').value = 'guru umum';
-                    }
-                    document.getElementById('btn-register').style.display = 'none';
-                }
-
-                input.value = ''; // reset biar ga salah input
             });
         });
     </script>

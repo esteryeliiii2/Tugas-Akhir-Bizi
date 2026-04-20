@@ -27,8 +27,9 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nis' => ['nullable', 'string'],
-            'nip' => ['nullable', 'string'],
+            'login' => ['required', 'string'],
+            'login_type' => ['required', 'in:nis,nip'],
+            'role' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -42,22 +43,26 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $noind = $this->nis ? 'nis' : 'nip';
-
-        if (!$this->nis && !$this->nip) {
-            throw ValidationException::withMessages([
-                'nis' => 'Isi NIS atau NIP',
-            ]);
-        }
+        $field = $this->login_type; // nis atau nip
 
         if (! Auth::attempt([
-                $noind => $this->input($noind),
+                $field => $this->login,
                 'password' => $this->password,
             ], $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                $noind => trans('auth.failed'),
+                'login' => 'Login failed',
+            ]);
+        }
+
+        $user = Auth::user();
+
+        if ($user->jabatan !== $this->role) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'login' => 'Role tidak sesuai dengan akun',
             ]);
         }
 
@@ -92,8 +97,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        $noind = $this->nis ? $this->nis : $this->nip;
-
-        return Str::transliterate(Str::lower($noind).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->login).'|'.$this->ip());
     }
 }

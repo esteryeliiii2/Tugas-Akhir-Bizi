@@ -24,5 +24,11 @@ class Perizinan extends Model
         'keperluan',
         'approver_umum_id',
         'approver_bk_id',
+        'alasan_reject',
+    ];
+
+    protected $casts = [
+        'jam_mulai' => 'datetime',
+        'jam_selesai' => 'datetime',
     ];
 }

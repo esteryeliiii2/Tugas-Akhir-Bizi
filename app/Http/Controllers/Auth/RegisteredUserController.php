@@ -56,11 +56,12 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-        if ($user == 'siswa') {
-            return redirect(route('dashboard-siswa', absolute: false));
-        } else {
-            return redirect(route('dashboard-guru', absolute: false));
-        }
+        return redirect(route('login'));
+        // Auth::login($user);
+        // if ($user == 'siswa') {
+        //     return redirect(route('dashboard-siswa', absolute: false));
+        // } else {
+        //     return redirect(route('dashboard-guru', absolute: false));
+        // }
     }
 }

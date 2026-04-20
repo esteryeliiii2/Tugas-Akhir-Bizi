@@ -12,10 +12,13 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
 
     Route::get('/ajukan-izin', [C_Siswa::class, 'ajukanIzin'])->name('ajukan_izin-siswa');
     Route::post('/ajukan-izin', [C_Siswa::class, 'storeSession'])->name('store_session-siswa');
-
-    Route::get('/guru-approve', [C_Siswa::class, 'guruApprove'])->name('guru_approve-siswa');
-    Route::get('/status-izin', [C_Siswa::class, 'statusIzin'])->name('status_izin-siswa');
     Route::post('/guru-approve', [C_Siswa::class, 'store'])->name('store-siswa');
+    Route::get('/guru-approve', [C_Siswa::class, 'guruApprove'])->name('guru_approve-siswa');
+
+    Route::get('/status-izin', [C_Siswa::class, 'statusIzin'])->name('status_izin-siswa');
+    Route::post('/batal', [C_Siswa::class, 'batal'])->name('batal-siswa');
+
+    Route::get('/riwayat-izin-siswa', [C_Siswa::class, 'riwayatIzinSiswa'])->name('riwayat-izin-siswa');
 });
 
 //guru
@@ -24,6 +27,7 @@ Route::middleware(['auth', 'role:guru umum,guru bk'])->group(function () {
     Route::get('/dashboard-guru', [C_Guru::class, 'index'])->name('dashboard-guru');
     Route::get('/daftar-pengajuan', [C_Guru::class, 'daftarPengajuan'])->name('daftar-pengajuan-guru');
     Route::get('/riwayat-izin-guru', [C_Guru::class, 'riwayatIzinGuru'])->name('riwayat-izin-guru');
+    Route::post('/persetujuan-guru', [C_Guru::class, 'persetujuanGuru'])->name('persetujuan-guru');
 });
 
 Route::middleware('auth')->group(function () {

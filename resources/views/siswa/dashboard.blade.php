@@ -52,7 +52,7 @@
         </div>
     </a>
 
-    <div class="card">
+    <a href="{{ route('status_izin-siswa') }}" class="card">
         <div class="card-top">
             <div class="card-icon">
                 <iconify-icon icon="ph:notification" width="20"></iconify-icon>
@@ -68,9 +68,9 @@
             </div>
         </div>
 
-    </div>
+    </a>
 
-    <div class="card">
+    <a href="{{ route('riwayat-izin-siswa') }}" class="card">
         <div class="card-top">
             <div class="card-icon">
                 <iconify-icon icon="solar:history-linear" width="20"></iconify-icon>
@@ -86,12 +86,13 @@
             </div>
         </div>
 
-    </div>
+    </a>
 
 </div>
 
 <h3 class="section-title">Aktivitas Perizinanmu</h3>
 
+@if (!$izin)
 <div id="emptyState" class="empty-state">
 
     <div class="empty-icon">
@@ -111,9 +112,9 @@
     </a>
 
 </div>
+@else
 
-
-<div id="filledState" style="display: none;">
+<div id="filledState">
 
     <div class="izin-card">
 
@@ -121,19 +122,45 @@
 
             <div class="izin-left">
                 <div class="izin-icon">
+                    @if (in_array($izin->status, [0,1]))
                     <iconify-icon icon="mdi:clock"></iconify-icon>
+                    @elseif (in_array($izin->status, [3,4]))
+                    <iconify-icon-red icon="mdi:clock"></iconify-icon-red>
+                    @elseif (in_array($izin->status, [2,10]))
+                    <iconify-icon-green icon="mdi:check"></iconify-icon-green>
+                    @endif
                 </div>
 
                 <div class="izin-text">
 
-                    <div class="izin-date">16 Maret 2026, 09:00 WIB</div>
+                    <div class="izin-date">
+                        {{ $izin->created_at->format('d M Y, H:i') }} WIB
+                    </div>
 
                     <div class="izin-row">
-                        <div class="izin-title">Sedang Ditinjau Oleh Guru Kelas</div>
+                        <div class="izin-title">
+                            @if ($izin->status == 0)
+                                Sedang Ditinjau Oleh Guru Kelas
+                            @elseif ($izin->status == 1)
+                                Sedang Ditinjau Oleh Guru BK
+                            @elseif ($izin->status == 2)
+                                Pengajuan Telah Disetujui
+                            @elseif ($izin->status == 3)
+                                Pengajuan Telah Disetujui
+                            @endif
+                        </div>
 
                         <div class="izin-user">
                             <img src="{{ asset('images/guru cowo.png') }}">
-                            <span>Agus Setyawan, S.Pd.</span>
+                            <span>
+                                @if ($izin->status == 0)
+                                    {{ $izin->approver_umum }}
+                                @elseif ($izin->status == 1)
+                                    {{ $izin->approver_bk }}
+                                @elseif ($izin->status == 2)
+                                    Satpam
+                                @endif
+                            </span>
                         </div>
                     </div>
 
@@ -142,7 +169,7 @@
             </div>
 
             <div class="izin-actions">
-                <a href="/status-izin/1" class="izin-detail">
+                <a href="/status-izin" class="izin-detail" style="text-decoration:none;color:black">
                     Lihat Detail
                 </a>
                 <iconify-icon icon="mdi:dots-vertical"></iconify-icon>
@@ -165,26 +192,26 @@
         <div class="line active"></div>
 
         <div class="step-item">
-            <div class="step active">
-                <div class="dot">2</div>
+            <div class="step {{ in_array($izin->status, [1,2,10]) ? 'done' : 'active' }}">
+                <div class="dot">{{ in_array($izin->status, [1,2,10]) ? '✓' : '2' }}</div>
                 <p>Persetujuan Guru<br>Kelas (Umum)</p>
             </div>
         </div>
 
-        <div class="line"></div>
+        <div class="line {{ in_array($izin->status, [1,2,10]) ? 'active' : '' }}"></div>
 
         <div class="step-item">
-            <div class="step">
-                <div class="dot">3</div>
+            <div class="step {{ in_array($izin->status, [2,10]) ? 'done' : '' }}{{ $izin->status == 1 ? 'active' : '' }}">
+                <div class="dot">{{ in_array($izin->status, [2,10]) ? '✓' : '3' }}</div>
                 <p>Persetujuan Guru<br>BK</p>
             </div>
         </div>
 
-        <div class="line"></div>
+        <div class="line {{ in_array($izin->status, [2,10]) ? 'active' : '' }}"></div>
 
         <div class="step-item">
-            <div class="step">
-                <div class="dot">4</div>
+            <div class="step {{ $izin->status == 10 ? 'done' : '' }}{{ $izin->status == 2 ? 'active' : '' }}">
+                <div class="dot">{{ $izin->status == 10 ? '✓' : '4' }}</div>
                 <p>Verifikasi QR<br>Code ke Satpam</p>
             </div>
         </div>
@@ -192,6 +219,7 @@
     </div>
 
 </div>
+@endif
 
 <script>
     window.onload = function() {

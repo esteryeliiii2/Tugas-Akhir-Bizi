@@ -46,10 +46,10 @@
                                 <span class="badge-status">SIJA</span>
                             </div>
                             <div class="guru-name">
-                                {{ $guruBk->nama }}{{ $guruBk->gelar ? ', ' . $guruBk->gelar : 'Retno Yolanda, S.Pd.' }}
+                                {{ $guruBk->nama }}{{ $guruBk->gelar ? ', ' . $guruBk->gelar : '' }}
                             </div>
 
-                            <input type="hidden" name="nama_guru_bk" value="{{ $guruBk->nama }}">
+                            <input type="hidden" name="nama_guru_bk" value="{{ $guruBk->nama }}{{ $guruBk->gelar ? ', ' . $guruBk->gelar : '' }}">
                             <input type="hidden" name="id_guru_bk" value="{{ $guruBk->id }}">
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                                 <span class="badge-umum">GURU UMUM</span>
                             </div>
                             <div class="guru-name" id="guru-name">{{ $guruUmumFirst->nama }}{{ $guruUmumFirst->gelar ? ', ' . $guruUmumFirst->gelar : ''}}</div>
-                            <input type="hidden" name="nama_guru_umum" id="guru-nama_hidden" value="{{ $guruUmumFirst->nama }}">
+                            <input type="hidden" name="nama_guru_umum" id="guru-nama_hidden" value="{{ $guruUmumFirst->nama }}{{ $guruUmumFirst->gelar ? ', ' . $guruUmumFirst->gelar : ''}}">
                             <input type="hidden" name="id_guru_umum" id="guru-id" value="{{ $guruUmumFirst->id }}">
 
                             <select id="guru-select" style="display:none;" onchange="pilihGuru('guru')">

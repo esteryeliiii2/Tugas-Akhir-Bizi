@@ -32,6 +32,13 @@ class AuthenticatedSessionController extends Controller
             'last_login' => now()
         ]);
 
+        $user = auth()->user();
+
+        if ($user->jabatan === 'siswa') {
+            return redirect()->route('dashboard-siswa');
+        } elseif (in_array($user->jabatan, ['guru umum','guru bk'])) {
+            return redirect()->route('dashboard-guru');
+        };
         return redirect()->intended(route('dashboard-siswa', absolute: false));
     }
 

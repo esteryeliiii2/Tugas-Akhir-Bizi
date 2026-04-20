@@ -14,23 +14,26 @@ class C_Siswa extends Controller
     public function index()
     {
         // $users = User::all();
-        $user = Auth::user();
-        if ($user->jabatan != 'siswa') {
-            return redirect()->route('dashboard-guru');
-        }
+        // $user = Auth::user();
+        // if ($user->jabatan != 'siswa') {
+        //     return redirect()->route('dashboard-guru');
+        // }
 
-        return view('siswa.dashboard');
-    }
+        $izin = Perizinan::where(function ($query) {
+            $query->where('penginput', Auth::id())
+                ->orWhere('approver_umum_id', Auth::id())
+                ->orWhere('approver_bk_id', Auth::id());
+            })
+            ->whereNotIn('status', [5, 10])
+            ->latest()
+            ->first();
 
-    public function statusIzin()
-    {
-        // $users = User::all();
-
-        return view('siswa.status-izin');
+        return view('siswa.dashboard', compact('izin'));
     }
 
     public function ajukanIzin()
     {
+        //nanti dibuat cek, jika saat ini udah ada pengajuan maka gabisa ngajuin lagi, selain itu dibuat biar cuma bisa izin dari jam 00:00 - 15.30
         return view('siswa.ajukan-izin');
     }
 
@@ -56,6 +59,15 @@ class C_Siswa extends Controller
         return view('siswa.guru-approve', compact('data', 'guruBk', 'guruUmum', 'guruUmumFirst'));
     }
 
+    
+    public function storeSession(Request $request)
+    {
+        session(['izin_data' => $request->all()]); //simpen dulu di session
+        // dd(session()->all());
+
+        return redirect()->route('guru_approve-siswa');
+    }
+
     public function store(Request $request)
     {
         $data = session('izin_data');
@@ -79,31 +91,79 @@ class C_Siswa extends Controller
             'jam_selesai' => $data['jam_selesai'] ? Carbon::today()->setTimeFromTimeString($data['jam_selesai']) : null,
         ]);
 
-        dd($finalData); //sementara biar ga kepush kalo ga sengaja
+        // dd($finalData); //sementara biar ga kepush kalo ga sengaja
 
         Perizinan::create($finalData);
 
         session()->forget('izin_data'); //ni hapus session yg sementara
 
-        // Perizinan::create([
-        //     'nama' => $request->nama,
-        //     'no_presensi' => $request->no_presensi,
-        //     'kelas' => $request->kelas,
-        //     'jurusan' => $request->jurusan,
-        //     'kembali' => $request->kembali,
-        //     'keperluan' => $request->keperluan,
-        //     'jam_mulai' => $request->jam_mulai,
-        //     'jam_selesai' => $request->jam_selesai,
-        // ]);
-
         return redirect()->route('status_izin-siswa');
     }
-
-    public function storeSession(Request $request)
+    
+    public function statusIzin()
     {
-        session(['izin_data' => $request->all()]); //simpen dulu di session
-        // dd(session()->all());
+        $izin = Perizinan::where(function ($query) {
+            $query->where('penginput', Auth::id())
+                ->orWhere('approver_umum_id', Auth::id())
+                ->orWhere('approver_bk_id', Auth::id());
+            })
+            ->whereNotIn('status', [5, 10])
+            ->latest()
+            ->first(); // ambil 1 terbaru
+        // dd($izin);
+        // 0 dibuat
+        // 1 approved guru umum
+        // 2 approved guru bk
+        // 3 reject guru umum
+        // 4 reject guru bk
+        // 5 batal pengajuan
+        // 10 berhasil pengajuan / approved satpam
 
-        return redirect()->route('guru_approve-siswa');
+        return view('siswa.status-izin', compact('izin'));
+    }
+
+    public function batal(Request $request)
+    {
+        $izin = Perizinan::where('id', $request->id)
+            ->where('penginput', Auth::id()) // biar ga bisa batalin punya orang lain
+            ->firstOrFail();
+        // update status jadi 5 (batal)
+        $izin->update([
+            'status' => 5
+        ]);
+
+        return redirect()->route('status_izin-siswa')
+            ->with('success', 'Pengajuan berhasil dibatalkan');
+    }
+
+    public function riwayatIzinSiswa()
+    {
+        $semuaIzin = Perizinan::where(function ($query) {
+                $query->where('penginput', Auth::id());
+            })
+            ->whereNotIn('status', [0,1,2,5])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // mapping status
+        $izinDisetujui = $semuaIzin->whereIn('status', [10]);
+        $izinDitolak   = $semuaIzin->whereIn('status', [3,4]);
+
+        // grouping by tanggal
+        \Carbon\Carbon::setLocale('id');
+
+        $groupDisetujui = $izinDisetujui->groupBy(function ($item) {
+            return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
+        });
+
+        $groupDitolak = $izinDitolak->groupBy(function ($item) {
+            return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
+        });
+
+        return view('siswa.riwayat-izin-siswa', compact(
+            'groupDisetujui',
+            'groupDitolak',
+            'semuaIzin'
+        ));
     }
 }
