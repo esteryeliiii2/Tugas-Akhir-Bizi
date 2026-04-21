@@ -127,7 +127,7 @@
                     @elseif (in_array($izin->status, [3,4]))
                     <iconify-icon-red icon="mdi:clock"></iconify-icon-red>
                     @elseif (in_array($izin->status, [2,10]))
-                    <iconify-icon-green icon="mdi:check"></iconify-icon-green>
+                    <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #1DB366;"></iconify-icon>
                     @endif
                 </div>
 

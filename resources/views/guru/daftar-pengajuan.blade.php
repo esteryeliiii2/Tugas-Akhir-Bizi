@@ -40,567 +40,573 @@ $dataIzin = [
 
 <div class="section-item" data-status="menunggu">
 
-        @if(count($pengajuanMenunggu) > 0)
+    @if(count($pengajuanMenunggu) > 0)
 
-        <div class="section-title" style="margin-top: 32px; font-size: 14px;">
-            Menunggu Peninjauan
-        </div>
+    <div class="section-title" style="margin-top: 32px; font-size: 14px;">
+        Menunggu Peninjauan
+    </div>
 
-        @foreach($pengajuanMenunggu as $index => $izin)
-        <div class="card-izinn">
+    @foreach($pengajuanMenunggu as $index => $izin)
+    <div class="card-izinn">
 
-            <div class="card-header-izin" data-index="menunggu-{{ $index }}" onclick="toggleCard(this)">
+        <div class="card-header-izin" data-index="menunggu-{{ $index }}" onclick="toggleCard(this)">
 
-                <div class="left-header">
+            <div class="left-header">
 
-                    <img src="{{ asset('images/profile.png') }}" class="avatar">
+                <img src="{{ asset('images/profile.png') }}" class="avatar">
 
-                    <div>
-                        <div class="tanggal">
-                            {{ $izin->created_at->format('d M Y, H:i') }} WIB
-                        </div>
-
-                        <div class="nama-row">
-                            <div class="nama">{{ $izin->nama }}</div>
-
-                            <span class="badge siswa">SISWA</span>
-                            <span class="badge sija">{{ $izin->jurusan }}</span>
-                        </div>
+                <div>
+                    <div class="tanggal">
+                        {{ $izin->created_at->format('d M Y, H:i') }} WIB
                     </div>
 
+                    <div class="nama-row">
+                        <div class="nama">{{ $izin->nama }}</div>
+
+                        <span class="badge siswa">SISWA</span>
+                        <span class="badge sija">{{ $izin->jurusan }}</span>
+                    </div>
                 </div>
 
-                <div class="action">
-                    <button type="button" class="btn-tolak" onclick="event.stopPropagation(); openModalTolak({{ $izin->id }})">Tolak ✕</button>
-                    <button type="button" class="btn-setuju" onclick="event.stopPropagation(); openModalSetuju({{ $izin->id }})">Setujui ✓</button>
-                    <span class="arrow" id="arrow-menunggu-{{ $index }}">⌄</span>
-                </div>
             </div>
 
-            <!-- BODY -->
-            <div class="card-body" id="card-menunggu-{{ $index }}" style="display: none;">
+            <div class="action">
+                <button type="button" class="btn-tolak" onclick="event.stopPropagation(); openModalTolak({{ $izin->id }})">Tolak ✕</button>
+                <button type="button" class="btn-setuju" onclick="event.stopPropagation(); openModalSetuju({{ $izin->id }})">Setujui ✓</button>
+                <span class="arrow" id="arrow-menunggu-{{ $index }}">⌄</span>
+            </div>
+        </div>
 
-                <hr class="line-data">
+        <!-- BODY -->
+        <div class="card-body" id="card-menunggu-{{ $index }}" style="display: none;">
 
-                <div class="grid">
+            <hr class="line-data">
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">01.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NAMA
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
-                        </div>
+            <div class="grid">
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NO URUT
-                            </label>
-                            <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
-                        </div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">01.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NAMA
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
+                    </div>
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KELAS
-                            </label>
-                            <div class="value" style="width: 100%;">
-                                {{ [
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NO URUT
+                        </label>
+                        <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KELAS
+                        </label>
+                        <div class="value" style="width: 100%;">
+                            {{ [
                                     10 => 'X (10)',
                                     11 => 'XI (11)',
                                     12 => 'XII (12)',
                                     13 => 'XIII (13)'
                                 ][$izin->kelas] ?? '-' }}
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JURUSAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
                         </div>
                     </div>
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">02.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KEPERLUAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
-                        </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JURUSAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
+                    </div>
+                </div>
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JAM IZIN
-                            </label>
-                            <div class="jam-wrapper">
-                                <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
-                                <span class="arrow">→</span>
-                                <div class="value small">{{ $izin->jam_selesai->format('H:i') }}</div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">02.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KEPERLUAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JAM IZIN
+                        </label>
+                        <div class="jam-wrapper">
+                            <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
+                            <span class="arrow">→</span>
+                            <div class="value small">
+                                {{ $izin->jam_selesai ? $izin->jam_selesai->format('H:i') : 'Tidak Kembali' }}
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">03.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU BK
-                            </label>
-                            <div class="value guru">
-                                <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
-                                <span>{{ $izin->approver_bk }}</span>
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU UMUM
-                            </label>
-                            <div class="value guru small">
-                                <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
-                                <span>{{ $izin->approver_umum }}</span>
-                            </div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">03.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU BK
+                        </label>
+                        <div class="value guru">
+                            <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                            <span>{{ $izin->approver_bk }}</span>
                         </div>
                     </div>
 
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU UMUM
+                        </label>
+                        <div class="value guru small">
+                            <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                            <span>{{ $izin->approver_umum }}</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
         </div>
-        @endforeach
-
-        @endif
 
     </div>
+    @endforeach
 
-    <div class="section-item" data-status="disetujui">
-        
-        @if(count($pengajuanDisetujui) > 0)
+    @endif
 
-        <div class="section-title" style="margin-top: 32px; font-size: 14px;">
-            Perizinan Disetujui
-        </div>
+</div>
 
-        @foreach($pengajuanDisetujui as $index => $izin)
-        <div class="card-izinn">
+<div class="section-item" data-status="disetujui">
 
-            <div class="card-header-izin" data-index="izin-{{ $index }}" onclick="toggleCard(this)">
+    @if(count($pengajuanDisetujui) > 0)
 
-                <div class="left-header">
+    <div class="section-title" style="margin-top: 32px; font-size: 14px;">
+        Perizinan Disetujui
+    </div>
 
-                    <img src="{{ asset('images/profile.png') }}" class="avatar">
+    @foreach($pengajuanDisetujui as $index => $izin)
+    <div class="card-izinn">
 
-                    <div>
-                        <div class="tanggal">
-                            {{ $izin->created_at->format('d M Y, H:i') }} WIB
-                        </div>
+        <div class="card-header-izin" data-index="izin-{{ $index }}" onclick="toggleCard(this)">
 
-                        <div class="nama-row">
-                            <div class="nama">{{ $izin->nama }}</div>
+            <div class="left-header">
 
-                            <span class="badge siswa">SISWA</span>
-                            <span class="badge sija">{{ $izin->jurusan }}</span>
-                        </div>
+                <img src="{{ asset('images/profile.png') }}" class="avatar">
+
+                <div>
+                    <div class="tanggal">
+                        {{ $izin->created_at->format('d M Y, H:i') }} WIB
                     </div>
 
+                    <div class="nama-row">
+                        <div class="nama">{{ $izin->nama }}</div>
+
+                        <span class="badge siswa">SISWA</span>
+                        <span class="badge sija">{{ $izin->jurusan }}</span>
+                    </div>
                 </div>
 
-                <div class="action">
-                    <span class="badge-status disetujui">
-                        Perizinan Disetujui ✓
-                    </span>
-                    <span class="arrow" id="arrow-izin-{{ $index }}">⌄</span>
-                </div>
             </div>
 
-            <!-- BODY -->
-            <div class="card-body" id="card-izin-{{ $index }}" style="display: none;">
+            <div class="action">
+                <span class="badge-status disetujui">
+                    Perizinan Disetujui ✓
+                </span>
+                <span class="arrow" id="arrow-izin-{{ $index }}">⌄</span>
+            </div>
+        </div>
 
-                <hr class="line-data">
+        <!-- BODY -->
+        <div class="card-body" id="card-izin-{{ $index }}" style="display: none;">
 
-                <div class="grid">
+            <hr class="line-data">
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">01.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NAMA
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
-                        </div>
+            <div class="grid">
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NO URUT
-                            </label>
-                            <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
-                        </div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">01.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NAMA
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
+                    </div>
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KELAS
-                            </label>
-                            <div class="value" style="width: 100%;">
-                                {{ [
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NO URUT
+                        </label>
+                        <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KELAS
+                        </label>
+                        <div class="value" style="width: 100%;">
+                            {{ [
                                     10 => 'X (10)',
                                     11 => 'XI (11)',
                                     12 => 'XII (12)',
                                     13 => 'XIII (13)'
                                 ][$izin->kelas] ?? '-' }}
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JURUSAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
                         </div>
                     </div>
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">02.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KEPERLUAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
-                        </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JURUSAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
+                    </div>
+                </div>
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JAM IZIN
-                            </label>
-                            <div class="jam-wrapper">
-                                <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
-                                <span class="arrow">→</span>
-                                <div class="value small">{{ $izin->jam_selesai->format('H:i') }}</div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">02.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KEPERLUAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JAM IZIN
+                        </label>
+                        <div class="jam-wrapper">
+                            <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
+                            <span class="arrow">→</span>
+                            <div class="value small">
+                                {{ $izin->jam_selesai ? $izin->jam_selesai->format('H:i') : 'Tidak Kembali' }}
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">03.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU BK
-                            </label>
-                            <div class="value guru">
-                                <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
-                                <span>{{ $izin->approver_bk }}</span>
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU UMUM
-                            </label>
-                            <div class="value guru small">
-                                <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
-                                <span>{{ $izin->approver_umum }}</span>
-                            </div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">03.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU BK
+                        </label>
+                        <div class="value guru">
+                            <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                            <span>{{ $izin->approver_bk }}</span>
                         </div>
                     </div>
 
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU UMUM
+                        </label>
+                        <div class="value guru small">
+                            <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                            <span>{{ $izin->approver_umum }}</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
         </div>
-        @endforeach
-
-        @endif
 
     </div>
+    @endforeach
 
-    <div class="section-item" data-status="ditolak">
+    @endif
 
-        @if(count($pengajuanDitolak) > 0)
+</div>
 
-        <div class="section-title" style="margin-top: 32px; font-size: 14px;">
-            Perizinan Ditolak
-        </div>
+<div class="section-item" data-status="ditolak">
 
-        @foreach($pengajuanDitolak as $index => $izin)
-        <div class="card-izinn">
+    @if(count($pengajuanDitolak) > 0)
 
-            <div class="card-header-izin" data-index="ditolak-{{ $index }}" onclick="toggleCard(this)">
+    <div class="section-title" style="margin-top: 32px; font-size: 14px;">
+        Perizinan Ditolak
+    </div>
 
-                <div class="left-header">
+    @foreach($pengajuanDitolak as $index => $izin)
+    <div class="card-izinn">
 
-                    <img src="{{ asset('images/profile.png') }}" class="avatar">
+        <div class="card-header-izin" data-index="ditolak-{{ $index }}" onclick="toggleCard(this)">
 
-                    <div>
-                        <div class="tanggal">{{ $izin->created_at->format('d M Y, H:i') }} WIB</div>
+            <div class="left-header">
 
-                        <div class="nama-row">
-                            <div class="nama">{{ $izin->nama }}</div>
+                <img src="{{ asset('images/profile.png') }}" class="avatar">
 
-                            <span class="badge siswa">SISWA</span>
-                            <span class="badge sija">{{ $izin->jurusan }}</span>
-                        </div>
+                <div>
+                    <div class="tanggal">{{ $izin->created_at->format('d M Y, H:i') }} WIB</div>
+
+                    <div class="nama-row">
+                        <div class="nama">{{ $izin->nama }}</div>
+
+                        <span class="badge siswa">SISWA</span>
+                        <span class="badge sija">{{ $izin->jurusan }}</span>
                     </div>
-
                 </div>
 
-                <div class="action">
-                    <span class="badge-status ditolak">
-                        Perizinan Ditolak ✕
-                    </span>
-                    <span class="arrow" id="arrow-ditolak-{{ $index }}">⌄</span>
-                </div>
             </div>
 
-            <!-- BODY -->
-            <div class="card-body" id="card-ditolak-{{ $index }}" style="display: none;">
+            <div class="action">
+                <span class="badge-status ditolak">
+                    Perizinan Ditolak ✕
+                </span>
+                <span class="arrow" id="arrow-ditolak-{{ $index }}">⌄</span>
+            </div>
+        </div>
 
-                <hr class="line-data">
+        <!-- BODY -->
+        <div class="card-body" id="card-ditolak-{{ $index }}" style="display: none;">
 
-                <div class="grid">
+            <hr class="line-data">
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">01.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NAMA
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
-                        </div>
+            <div class="grid">
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NO URUT
-                            </label>
-                            <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
-                        </div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">01.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NAMA
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
+                    </div>
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KELAS
-                            </label>
-                            <div class="value" style="width: 100%;">
-                                {{ [
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NO URUT
+                        </label>
+                        <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KELAS
+                        </label>
+                        <div class="value" style="width: 100%;">
+                            {{ [
                                     10 => 'X (10)',
                                     11 => 'XI (11)',
                                     12 => 'XII (12)',
                                     13 => 'XIII (13)'
                                 ][$izin->kelas] ?? '-' }}
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JURUSAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
                         </div>
                     </div>
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">02.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KEPERLUAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
-                        </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JURUSAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
+                    </div>
+                </div>
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JAM IZIN
-                            </label>
-                            <div class="jam-wrapper">
-                                <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
-                                <span class="arrow">→</span>
-                                <div class="value small">{{ $izin->jam_selesai->format('H:i') }}</div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">02.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KEPERLUAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JAM IZIN
+                        </label>
+                        <div class="jam-wrapper">
+                            <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
+                            <span class="arrow">→</span>
+                            <div class="value small">
+                                {{ $izin->jam_selesai ? $izin->jam_selesai->format('H:i') : 'Tidak Kembali' }}
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">03.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU BK
-                            </label>
-                            <div class="value guru">
-                                <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
-                                <span>{{ $izin['approver_bk'] }}</span>
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU UMUM
-                            </label>
-                            <div class="value guru small">
-                                <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
-                                <span>{{ $izin['approver_umum'] }}</span>
-                            </div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">03.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU BK
+                        </label>
+                        <div class="value guru">
+                            <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                            <span>{{ $izin['approver_bk'] }}</span>
                         </div>
                     </div>
 
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU UMUM
+                        </label>
+                        <div class="value guru small">
+                            <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                            <span>{{ $izin['approver_umum'] }}</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
         </div>
-        @endforeach
-
-        @endif
 
     </div>
+    @endforeach
+
+    @endif
+
+</div>
 
 
-    <!-- modal -->
-    <form action="{{ route('persetujuan-guru') }}" method="POST">
-        @csrf
-        <input type="hidden" name="id" id="id" value="">
-        <div id="modal-tolak" class="modal-overlay" style="display:none;" onclick="closeModalTolak()">
+<!-- modal -->
+<form action="{{ route('persetujuan-guru') }}" method="POST">
+    @csrf
+    <input type="hidden" name="id" id="id" value="">
+    <div id="modal-tolak" class="modal-overlay" style="display:none;" onclick="closeModalTolak()">
 
-            <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-box" onclick="event.stopPropagation()">
 
-                <div class="modal-icon">
-                    <div class="icon-line">
-                        <div class="line-red"></div>
+            <div class="modal-icon">
+                <div class="icon-line">
+                    <div class="line-red"></div>
 
-                        <div class="icon-box red">
-                            <iconify-icon icon="iconoir:cancel"></iconify-icon>
-                        </div>
-
-                        <div class="line-red"></div>
+                    <div class="icon-box red">
+                        <iconify-icon icon="iconoir:cancel"></iconify-icon>
                     </div>
+
+                    <div class="line-red"></div>
                 </div>
-
-                <h2 class="modal-title">Tolak Pengajuan Izin?</h2>
-
-                <p class="modal-desc">
-                    Pengajuan izin akan ditolak dan tidak dapat diproses lebih lanjut.
-                    Siswa dapat mengajukan kembali dengan data yang sesuai.
-                </p>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn-kembali" onclick="closeModalTolak()">Batal</button>
-                    <button type="button" class="btn-submit" onclick="tolakIzin()" style="background:#F24141; color:#fff;">
-                        Tolak Perizinan
-                    </button>
-                </div>
-
             </div>
+
+            <h2 class="modal-title">Tolak Pengajuan Izin?</h2>
+
+            <p class="modal-desc">
+                Pengajuan izin akan ditolak dan tidak dapat diproses lebih lanjut.
+                Siswa dapat mengajukan kembali dengan data yang sesuai.
+            </p>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-kembali" onclick="closeModalTolak()">Batal</button>
+                <button type="button" class="btn-submit" onclick="tolakIzin()" style="background:#F24141; color:#fff;">
+                    Tolak Perizinan
+                </button>
+            </div>
+
         </div>
+    </div>
 
-        <div id="modal-setuju" class="modal-overlay" style="display:none;" onclick="closeModalSetuju()">
+    <div id="modal-setuju" class="modal-overlay" style="display:none;" onclick="closeModalSetuju()">
 
-            <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-box" onclick="event.stopPropagation()">
 
-                <div class="modal-icon">
-                    <div class="icon-line">
-                        <div class="line-green"></div>
+            <div class="modal-icon">
+                <div class="icon-line">
+                    <div class="line-green"></div>
 
-                        <div class="icon-box-green">
-                            <iconify-icon icon="uim:check"></iconify-icon>
-                        </div>
-
-                        <div class="line-green"></div>
+                    <div class="icon-box-green">
+                        <iconify-icon icon="uim:check"></iconify-icon>
                     </div>
+
+                    <div class="line-green"></div>
                 </div>
-
-                <h2 class="modal-title">Setujui Pengajuan Izin?</h2>
-
-                <p class="modal-desc">
-                    Pastikan data yang diajukan sudah sesuai sebelum memberikan persetujuan.
-                </p>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn-kembali" onclick="closeModalSetuju()">Batal</button>
-                    <button type="submit" class="btn-submit" onclick="setujuiIzin()" style="background:#121212; border: 1px solid #3B3B3B; color:#fff;" name="jenis" value="1">
-                        Setujui Perizinan
-                    </button>
-                </div>
-
             </div>
+
+            <h2 class="modal-title">Setujui Pengajuan Izin?</h2>
+
+            <p class="modal-desc">
+                Pastikan data yang diajukan sudah sesuai sebelum memberikan persetujuan.
+            </p>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-kembali" onclick="closeModalSetuju()">Batal</button>
+                <button type="submit" class="btn-submit" onclick="setujuiIzin()" style="background:#121212; border: 1px solid #3B3B3B; color:#fff;" name="jenis" value="1">
+                    Setujui Perizinan
+                </button>
+            </div>
+
         </div>
+    </div>
 
-        <div id="modal-catatan" class="modal-overlay" style="display:none;" onclick="closeModalCatatan()">
+    <div id="modal-catatan" class="modal-overlay" style="display:none;" onclick="closeModalCatatan()">
 
-            <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-box" onclick="event.stopPropagation()">
 
-                <div class="modal-icon">
-                    <div class="icon-line">
-                        <div class="line-red"></div>
+            <div class="modal-icon">
+                <div class="icon-line">
+                    <div class="line-red"></div>
 
-                        <div class="icon-box red">
-                            <iconify-icon icon="iconoir:cancel"></iconify-icon>
-                        </div>
-
-                        <div class="line-red"></div>
+                    <div class="icon-box red">
+                        <iconify-icon icon="iconoir:cancel"></iconify-icon>
                     </div>
+
+                    <div class="line-red"></div>
                 </div>
-
-                <h2 class="modal-title">Catatan Alasan Penolakan</h2>
-
-                <p class="modal-desc" style="margin-bottom: 24px;">
-                    Jelaskan alasan penolakan pengajuan izin agar siswa dapat memahami dan memperbaiki pengajuan berikutnya.
-                </p>
-
-                <textarea id="catatan-text" name="catatanPenolakan"
-                    placeholder="Tulis alasan penolakan..."
-                    style="width:100%; height:100px; margin-top:12px; margin-bottom: 40px;padding:10px; border-radius:8px;"></textarea>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn-kembali" onclick="closeModalCatatan()">Batalkan</button>
-                    <button type="submit" class="btn-submit" onclick="submitTolak()" style="background:#F24141; color:#fff;" name="jenis" value="0">
-                        Tolak
-                    </button>
-                </div>
-
             </div>
+
+            <h2 class="modal-title">Catatan Alasan Penolakan</h2>
+
+            <p class="modal-desc" style="margin-bottom: 24px;">
+                Jelaskan alasan penolakan pengajuan izin agar siswa dapat memahami dan memperbaiki pengajuan berikutnya.
+            </p>
+
+            <textarea id="catatan-text" name="catatanPenolakan"
+                placeholder="Tulis alasan penolakan..."
+                style="width:100%; height:100px; margin-top:12px; margin-bottom: 40px;padding:10px; border-radius:8px;"></textarea>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-kembali" onclick="closeModalCatatan()">Batalkan</button>
+                <button type="submit" class="btn-submit" onclick="submitTolak()" style="background:#F24141; color:#fff;" name="jenis" value="0">
+                    Tolak
+                </button>
+            </div>
+
         </div>
-    </form>
+    </div>
+</form>
 
 @else
 
-    <!-- EMPTY STATE -->
-    <div class="empty-state-guru">
-        <div class="empty-icon">
-            <img src="{{ asset('images/no izin.png') }}" alt="izin">
-        </div>
-        <div class="empty-title">Belum Ada Pengajuan Izin</div>
-        <div class="empty-desc">
-            Ajukan izin melalui formulir untuk memulai proses perizinan.
-        </div>
+<!-- EMPTY STATE -->
+<div class="empty-state-guru">
+    <div class="empty-icon">
+        <img src="{{ asset('images/no izin.png') }}" alt="izin">
     </div>
+    <div class="empty-title">Belum Ada Pengajuan Izin</div>
+    <div class="empty-desc">
+        Ajukan izin melalui formulir untuk memulai proses perizinan.
+    </div>
+</div>
 
 @endif
 

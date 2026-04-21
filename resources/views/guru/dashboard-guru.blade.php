@@ -125,8 +125,8 @@
         </div>
 
         <div class="action">
-            <button type="button" class="btn-tolak" onclick="event.stopPropagation(); openModalTolak({{ $izin->id }})">Tolak ✕</button>
-            <button type="button" class="btn-setuju" onclick="event.stopPropagation(); openModalSetuju({{ $izin->id }})">Setujui ✓</button>
+            <button type="button" class="btn-tolak" onclick="event.stopPropagation(); openModalTolak('{{ $izin->id }}')">Tolak ✕</button>
+            <button type="button" class="btn-setuju" onclick="event.stopPropagation(); openModalSetuju('{{ $izin->id }}')">Setujui ✓</button>
             <span class="arrow" id="arrow-{{ $index }}" style="transform: rotate(180deg);">⌄</span>
         </div>
     </div>
@@ -198,7 +198,9 @@
                     <div class="jam-wrapper">
                         <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
                         <span class="arrow">→</span>
-                        <div class="value small">{{ $izin->jam_selesai->format('H:i') }}</div>
+                        <div class="value small">
+                            {{ $izin->jam_selesai ? $izin->jam_selesai->format('H:i') : 'Tidak Kembali' }}
+                        </div>
                     </div>
                 </div>
             </div>

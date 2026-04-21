@@ -9,29 +9,29 @@ $izin = true;
 
 <!-- empty state -->
 @if (!$izin)
-    <div id="empty-state">
-        <div class="empty-wrapper">
-            <div class="empty-izin">
+<div id="empty-state">
+    <div class="empty-wrapper">
+        <div class="empty-izin">
 
-                <div class="empty-icon">
-                    <img src="{{ asset('images/izin.png') }}" alt="izin">
-                </div>
-
-                <div class="empty-title">
-                    Belum Ada Pengajuan Izin
-                </div>
-
-                <div class="empty-desc">
-                    Ajukan izin melalui formulir untuk memulai proses perizinan.
-                </div>
-
-                <a href="{{ route('ajukan_izin-siswa') }}" class="empty-btn">
-                    Ajukan Izin
-                </a>
-
+            <div class="empty-icon">
+                <img src="{{ asset('images/izin.png') }}" alt="izin">
             </div>
+
+            <div class="empty-title">
+                Belum Ada Pengajuan Izin
+            </div>
+
+            <div class="empty-desc">
+                Ajukan izin melalui formulir untuk memulai proses perizinan.
+            </div>
+
+            <a href="{{ route('ajukan_izin-siswa') }}" class="empty-btn">
+                Ajukan Izin
+            </a>
+
         </div>
     </div>
+</div>
 @else
 <!-- detail izin -->
 <div id="detail-izin">
@@ -53,7 +53,11 @@ $izin = true;
             <div class="form-card">
                 <div class="izin-left-2">
                     <div class="izin-icon">
+                        @if ($izin->status == 2)
+                        <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #1DB366;"></iconify-icon>
+                        @else
                         <iconify-icon icon="mdi:clock"></iconify-icon>
+                        @endif
                     </div>
 
                     <div class="izin-header-row">
@@ -66,11 +70,11 @@ $izin = true;
                             <div class="izin-row">
                                 <div class="izin-title">
                                     @if ($izin->status == 0)
-                                        Sedang Ditinjau Oleh Guru Kelas
+                                    Sedang Ditinjau Oleh Guru Kelas
                                     @elseif ($izin->status == 1)
-                                        Sedang Ditinjau Oleh Guru BK
+                                    Sedang Ditinjau Oleh Guru BK
                                     @elseif ($izin->status == 2)
-                                        Izin Disetujui
+                                    Perizinan Telah Disetujui
                                     @endif
                                 </div>
                             </div>
@@ -135,9 +139,15 @@ $izin = true;
                         <div class="row">
                             <label>JAM IZIN</label>
                             <div class="jam-wrapper">
-                                <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
+                                <div class="value small">
+                                    {{ $izin->jam_mulai ? $izin->jam_mulai->format('H:i') : '--:--' }}
+                                </div>
+
                                 <span class="arrow">→</span>
-                                <div class="value small">{{ $izin->jam_selesai->format('H:i') }}</div>
+
+                                <div class="value small">
+                                    {{ $izin->jam_selesai ? $izin->jam_selesai->format('H:i') : 'Tidak Kembali' }}
+                                </div>
                             </div>
                         </div>
 
@@ -167,13 +177,20 @@ $izin = true;
                         </div>
                     </div>
 
-                    @if (in_array($izin->status, [0, 1, 2]))
-                        <div class="btn-wrapper">
-                            <button class="btn-batal-izin" onclick="openModal()">
-                                Batalkan Pengajuan
-                            </button>
-                        </div>
-                    @endif
+                    <div class="btn-wrapper">
+                        @if ($izin->status == 2)
+                        {{-- Tombol Lihat QR Code (Hanya muncul jika status 2) --}}
+                        <button class="btn-lihat-qr" onclick="openModalQR()" style="background: #1DB366; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <iconify-icon icon="solar:qr-code-bold-duotone" style="font-size: 20px;"></iconify-icon>
+                            Lihat QR Code
+                        </button>
+                        @elseif (in_array($izin->status, [0, 1]))
+                        {{-- Tombol Batalkan (Hanya muncul jika status 0 atau 1) --}}
+                        <button class="btn-batal-izin" onclick="openModal()">
+                            Batalkan Pengajuan
+                        </button>
+                        @endif
+                    </div>
 
                 </div>
             </div>
@@ -249,7 +266,7 @@ $izin = true;
         <div class="modal-actions">
             <button type="button" class="btn-kembali" onclick="closeModal()">Lanjutkan Pengajuan</button>
             <form action="{{ route('batal-siswa') }}" method="POST">
-            @csrf
+                @csrf
                 <input type="hidden" name="id" value="{{ $izin->id }}">
                 <button type="submit" class="btn-submit" onclick="cancelIzin()" style="background: #F24141; color: #FCFCFC; border: 1px solid #F56666;">Batalkan Pengajuan</button>
             </form>
@@ -258,6 +275,23 @@ $izin = true;
     </div>
 
 </div>
+
+<div id="modalQR" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+        <span class="modal-close" onclick="closeModalQR()">✕</span>
+        <h2 class="modal-title">QR Code Perizinan</h2>
+        <p class="modal-desc">Tunjukkan QR Code ini kepada Satpam untuk diverifikasi.</p>
+
+        <div class="qr-display" style="margin: 20px 0; text-align: center;">
+            {!! QrCode::size(200)->generate(route('surat-izin', $izin->id)) !!}
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="btn-kembali" onclick="closeModalQR()" style="width: 100%;">Tutup</button>
+        </div>
+    </div>
+</div>
+
 @endif
 
 <script>
@@ -269,6 +303,13 @@ $izin = true;
         document.getElementById("modal").style.display = "none";
     }
 
+    function openModalQR() {
+        document.getElementById("modalQR").style.display = "flex";
+    }
+
+    function closeModalQR() {
+        document.getElementById("modalQR").style.display = "none";
+    }
     // function cancelIzin() {
     //     sessionStorage.setItem("izin", "false");
 

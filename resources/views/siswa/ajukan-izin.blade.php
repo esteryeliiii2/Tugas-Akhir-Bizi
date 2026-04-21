@@ -26,7 +26,7 @@
         <!-- DATA SISWA -->
         <form action="{{ route('store_session-siswa') }}" method="POST">
             @csrf
-            
+
             <div class="form-card">
 
                 <div class="card-header-box">
@@ -46,7 +46,7 @@
                             <option value="">Pilih no. urut</option>
                             @for ($i = 1; $i <= 36; $i++)
                                 <option value="{{ $i }}">{{ $i }}</option>
-                            @endfor
+                                @endfor
                         </select>
                     </div>
 
@@ -108,14 +108,13 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="container-jam-kembali">
                         <label>JAM SELESAI IZIN</label>
                         <div class="time-input">
                             <input type="time" name="jam_selesai">
                             <iconify-icon icon="solar:clock-circle-linear" class="time-icon"></iconify-icon>
                         </div>
                     </div>
-
                 </div>
 
             </div>
@@ -126,10 +125,10 @@
                 </button>
 
                 {{-- <form action="{{ route('guru-approve') }}" method="GET"> --}}
-                    <button type="submit" class="btn-submit">
-                        Lanjutkan Pengajuan
-                        <iconify-icon icon="iconamoon:arrow-right-2-light"></iconify-icon>
-                    </button>
+                <button type="submit" class="btn-submit">
+                    Lanjutkan Pengajuan
+                    <iconify-icon icon="iconamoon:arrow-right-2-light"></iconify-icon>
+                </button>
                 {{-- </form> --}}
             </div>
         </form>
@@ -186,7 +185,7 @@
     const kelasSelect = document.getElementById('kelas');
     const jurusanSelect = document.getElementById('jurusan');
 
-    kelasSelect.addEventListener('change', function () {
+    kelasSelect.addEventListener('change', function() {
         const selectedKelas = this.value;
 
         // reset jurusan
@@ -200,6 +199,33 @@
                 jurusanSelect.appendChild(option);
             });
         }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Cari radio button-nya
+        const radioKembali = document.querySelectorAll('input[name="kembali"]');
+        // 2. Cari kontainer jam selesai yang tadi kita kasih ID
+        const containerJamSelesai = document.getElementById('container-jam-kembali');
+
+        // 3. Fungsi untuk cek kondisi
+        function toggleJamInput() {
+            // Cari mana yang sedang dipilih (checked)
+            const selectedValue = document.querySelector('input[name="kembali"]:checked').value;
+            
+            if (selectedValue === 'tidak') {
+                containerJamSelesai.style.display = 'none'; // Sembunyikan
+            } else {
+                containerJamSelesai.style.display = 'block'; // Munculkan
+            }
+        }
+
+        // 4. Jalankan fungsi setiap kali ada perubahan klik
+        radioKembali.forEach(radio => {
+            radio.addEventListener('change', toggleJamInput);
+        });
+
+        // 5. Jalankan saat halaman pertama kali dibuka (biar sinkron)
+        toggleJamInput();
     });
 </script>
 @endsection

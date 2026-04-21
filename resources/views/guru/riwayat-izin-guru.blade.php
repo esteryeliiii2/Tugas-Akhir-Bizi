@@ -77,365 +77,369 @@ $dataIzin = [
 
 @else
 
-    @foreach($groupDisetujui as $tanggal => $items)
+@foreach($groupDisetujui as $tanggal => $items)
 
-    <div class="section-item" data-status="disetujui">
+<div class="section-item" data-status="disetujui">
 
-        <div class="section-title" style="margin-top: 32px; font-size: 14px;">
-            {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('l, d F Y') }}
-        </div>
+    <div class="section-title" style="margin-top: 32px; font-size: 14px;">
+        {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('l, d F Y') }}
+    </div>
 
-        @foreach($items as $index => $izin)
-        <div class="card-izinn">
+    @foreach($items as $index => $izin)
+    <div class="card-izinn">
 
-            <div class="card-header-izin" data-index="izin-{{ $tanggal }}-{{ $index }}" onclick="toggleCard(this)">
+        <div class="card-header-izin" data-index="izin-{{ $tanggal }}-{{ $index }}" onclick="toggleCard(this)">
 
-                <div class="left-header">
+            <div class="left-header">
 
-                    <img src="{{ asset('images/profile.png') }}" class="avatar">
+                <img src="{{ asset('images/profile.png') }}" class="avatar">
 
-                    <div>
-                        <div class="tanggal">
-                            {{ $izin->created_at->format('d M Y, H:i') }} WIB
-                        </div>
-
-                        <div class="nama-row">
-                            <div class="nama">{{ $izin->nama }}</div>
-
-                            <span class="badge siswa">SISWA</span>
-                            <span class="badge sija">{{ $izin->jurusan }}</span>
-                        </div>
+                <div>
+                    <div class="tanggal">
+                        {{ $izin->created_at->format('d M Y, H:i') }} WIB
                     </div>
 
+                    <div class="nama-row">
+                        <div class="nama">{{ $izin->nama }}</div>
+
+                        <span class="badge siswa">SISWA</span>
+                        <span class="badge sija">{{ $izin->jurusan }}</span>
+                    </div>
                 </div>
 
-                <div class="action">
-                    <span class="badge-status disetujui">
-                        Perizinan Disetujui ✓
-                    </span>
-                    <span class="arrow" id="arrow-izin-{{ $tanggal }}-{{ $index }}">⌄</span>
-                </div>
             </div>
 
-            <div class="card-body" id="card-izin-{{ $tanggal }}-{{ $index }}" style="display: none;">
-                <hr class="line-data">
+            <div class="action">
+                <span class="badge-status disetujui">
+                    Perizinan Disetujui ✓
+                </span>
+                <span class="arrow" id="arrow-izin-{{ $tanggal }}-{{ $index }}">⌄</span>
+            </div>
+        </div>
 
-                <div class="grid">
+        <div class="card-body" id="card-izin-{{ $tanggal }}-{{ $index }}" style="display: none;">
+            <hr class="line-data">
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">01.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NAMA
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
-                        </div>
+            <div class="grid">
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NO URUT
-                            </label>
-                            <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
-                        </div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">01.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NAMA
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
+                    </div>
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KELAS
-                            </label>
-                            <div class="value" style="width: 100%;">
-                                {{ [
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NO URUT
+                        </label>
+                        <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KELAS
+                        </label>
+                        <div class="value" style="width: 100%;">
+                            {{ [
                                     10 => 'X (10)',
                                     11 => 'XI (11)',
                                     12 => 'XII (12)',
                                     13 => 'XIII (13)'
                                 ][$izin->kelas] ?? '-' }}
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JURUSAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
                         </div>
                     </div>
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">02.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KEPERLUAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JAM IZIN
-                            </label>
-                            <div class="jam-wrapper">
-                                <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
-                                <span class="arrow">→</span>
-                                <div class="value small">{{ $izin->jam_selesai->format('H:i') }}</div>
-                            </div>
-                        </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JURUSAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
                     </div>
-
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">03.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU BK
-                            </label>
-                            <div class="value guru">
-                                <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
-                                <span>{{ $izin->approver_bk }}</span>
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU UMUM
-                            </label>
-                            <div class="value guru small">
-                                <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
-                                <span>{{ $izin->approver_umum }}</span>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
 
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">02.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KEPERLUAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JAM IZIN
+                        </label>
+                        <div class="jam-wrapper">
+                            <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
+                            <span class="arrow">→</span>
+                            <div class="value small">
+                                {{ $izin->jam_selesai ? $izin->jam_selesai->format('H:i') : 'Tidak Kembali' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">03.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU BK
+                        </label>
+                        <div class="value guru">
+                            <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                            <span>{{ $izin->approver_bk }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU UMUM
+                        </label>
+                        <div class="value guru small">
+                            <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                            <span>{{ $izin->approver_umum }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        @endforeach
 
     </div>
-
     @endforeach
 
-    @foreach($groupDitolak as $tanggal => $items)
+</div>
 
-    <div class="section-item" data-status="ditolak">
+@endforeach
 
-        <div class="section-title" style="margin-top: 32px; font-size: 14px;">
-            {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('l, d F Y') }}
-        </div>
+@foreach($groupDitolak as $tanggal => $items)
 
-        @foreach($items as $index => $izin)
-        <div class="card-izinn">
+<div class="section-item" data-status="ditolak">
 
-            <div class="card-header-izin" data-index="izin-{{ $tanggal }}-{{ $index }}" onclick="toggleCard(this)">
+    <div class="section-title" style="margin-top: 32px; font-size: 14px;">
+        {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('l, d F Y') }}
+    </div>
 
-                <div class="left-header">
+    @foreach($items as $index => $izin)
+    <div class="card-izinn">
 
-                    <img src="{{ asset('images/profile.png') }}" class="avatar">
+        <div class="card-header-izin" data-index="izin-{{ $tanggal }}-{{ $index }}" onclick="toggleCard(this)">
 
-                    <div>
-                        <div class="tanggal">
-                            {{ $izin->created_at->format('d M Y, H:i') }} WIB
-                        </div>
+            <div class="left-header">
 
-                        <div class="nama-row">
-                            <div class="nama">{{ $izin->nama }}</div>
+                <img src="{{ asset('images/profile.png') }}" class="avatar">
 
-                            <span class="badge siswa">SISWA</span>
-                            <span class="badge sija">{{ $izin->jurusan }}</span>
-                        </div>
+                <div>
+                    <div class="tanggal">
+                        {{ $izin->created_at->format('d M Y, H:i') }} WIB
                     </div>
 
+                    <div class="nama-row">
+                        <div class="nama">{{ $izin->nama }}</div>
+
+                        <span class="badge siswa">SISWA</span>
+                        <span class="badge sija">{{ $izin->jurusan }}</span>
+                    </div>
                 </div>
 
-                <div class="action">
-                    <span class="badge-status ditolak">
-                        Perizinan Ditolak ✕
-                    </span>
-                    <span class="arrow" id="arrow-izin-{{ $tanggal }}-{{ $index }}">⌄</span>
-                </div>
             </div>
 
-            <div class="card-body" id="card-izin-{{ $tanggal }}-{{ $index }}" style="display: none;">
-                <hr class="line-data">
+            <div class="action">
+                <span class="badge-status ditolak">
+                    Perizinan Ditolak ✕
+                </span>
+                <span class="arrow" id="arrow-izin-{{ $tanggal }}-{{ $index }}">⌄</span>
+            </div>
+        </div>
 
-                <div class="grid">
+        <div class="card-body" id="card-izin-{{ $tanggal }}-{{ $index }}" style="display: none;">
+            <hr class="line-data">
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">01.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NAMA
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
-                        </div>
+            <div class="grid">
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                NO URUT
-                            </label>
-                            <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
-                        </div>
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">01.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NAMA
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
+                    </div>
 
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KELAS
-                            </label>
-                            <div class="value" style="width: 100%;">
-                                {{ [
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            NO URUT
+                        </label>
+                        <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KELAS
+                        </label>
+                        <div class="value" style="width: 100%;">
+                            {{ [
                                     10 => 'X (10)',
                                     11 => 'XI (11)',
                                     12 => 'XII (12)',
                                     13 => 'XIII (13)'
                                 ][$izin->kelas] ?? '-' }}
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JURUSAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
                         </div>
                     </div>
 
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">02.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                KEPERLUAN
-                            </label>
-                            <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                JAM IZIN
-                            </label>
-                            <div class="jam-wrapper">
-                                <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
-                                <span class="arrow">→</span>
-                                <div class="value small">{{ $izin->jam_selesai->format('H:i') }}</div>
-                            </div>
-                        </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JURUSAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
                     </div>
-
-                    <div class="col">
-                        <div class="card-header-none">
-                            <span class="card-number" style="color: #7ABAFF;">03.</span>
-                            <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU BK
-                            </label>
-                            <div class="value guru">
-                                <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
-                                <span>{{ $izin->approver_bk }}</span>
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                            <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                                GURU UMUM
-                            </label>
-                            <div class="value guru small">
-                                <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
-                                <span>{{ $izin->approver_umum }}</span>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
 
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">02.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            KEPERLUAN
+                        </label>
+                        <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            JAM IZIN
+                        </label>
+                        <div class="jam-wrapper">
+                            <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
+                            <span class="arrow">→</span>
+                           <div class="value small">
+                            {{ $izin->jam_selesai ? $izin->jam_selesai->format('H:i') : 'Tidak Kembali' }}
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card-header-none">
+                        <span class="card-number" style="color: #7ABAFF;">03.</span>
+                        <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
+                    </div>
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU BK
+                        </label>
+                        <div class="value guru">
+                            <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                            <span>{{ $izin->approver_bk }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
+                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            GURU UMUM
+                        </label>
+                        <div class="value guru small">
+                            <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                            <span>{{ $izin->approver_umum }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        @endforeach
 
     </div>
-
     @endforeach
+
+</div>
+
+@endforeach
 
 @endif
 
 @endsection
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
 
-    function toggleCard(el) {
-        const index = el.getAttribute('data-index');
+        function toggleCard(el) {
+            const index = el.getAttribute('data-index');
 
-        const card = document.getElementById('card-' + index);
-        const arrow = document.getElementById('arrow-' + index);
+            const card = document.getElementById('card-' + index);
+            const arrow = document.getElementById('arrow-' + index);
 
-        const isHidden = window.getComputedStyle(card).display === "none";
+            const isHidden = window.getComputedStyle(card).display === "none";
 
-        if (isHidden) {
-            card.style.display = "block";
-            arrow.style.transform = "rotate(180deg)";
-        } else {
-            card.style.display = "none";
-            arrow.style.transform = "rotate(0deg)";
-        }
-    }
-
-    window.toggleCard = toggleCard;
-
-    const searchInput = document.getElementById('searchInput');
-    const cards = document.querySelectorAll('.card-izinn');
-
-    searchInput.addEventListener('keyup', function() {
-        const keyword = this.value.toLowerCase();
-
-        cards.forEach(card => {
-            const text = card.innerText.toLowerCase();
-
-            if (text.includes(keyword)) {
-                card.style.display = '';
+            if (isHidden) {
+                card.style.display = "block";
+                arrow.style.transform = "rotate(180deg)";
             } else {
-                card.style.display = 'none';
+                card.style.display = "none";
+                arrow.style.transform = "rotate(0deg)";
             }
-        });
-    });
+        }
 
-    document.querySelectorAll(".dropdown").forEach(drop => {
-        const btn = drop.querySelector(".dropdown-btn");
-        const items = drop.querySelectorAll(".dropdown-content div");
+        window.toggleCard = toggleCard;
 
-        btn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
-            drop.classList.toggle("active");
-        });
+        const searchInput = document.getElementById('searchInput');
+        const cards = document.querySelectorAll('.card-izinn');
 
-        items.forEach(item => {
-            item.addEventListener("click", () => {
-                btn.firstChild.textContent = item.innerText + " ";
-                drop.classList.remove("active");
+        searchInput.addEventListener('keyup', function() {
+            const keyword = this.value.toLowerCase();
+
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+
+                if (text.includes(keyword)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         });
-    });
 
-    // klik luar = close
-    document.addEventListener("click", function(e) {
-        if (!e.target.closest(".dropdown")) {
-            document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
-        }
-    });
+        document.querySelectorAll(".dropdown").forEach(drop => {
+            const btn = drop.querySelector(".dropdown-btn");
+            const items = drop.querySelectorAll(".dropdown-content div");
 
-});
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
+                drop.classList.toggle("active");
+            });
+
+            items.forEach(item => {
+                item.addEventListener("click", () => {
+                    btn.firstChild.textContent = item.innerText + " ";
+                    drop.classList.remove("active");
+                });
+            });
+        });
+
+        // klik luar = close
+        document.addEventListener("click", function(e) {
+            if (!e.target.closest(".dropdown")) {
+                document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
+            }
+        });
+
+    });
 </script>

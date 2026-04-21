@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Perizinan;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class C_Siswa extends Controller
 {
@@ -23,7 +25,7 @@ class C_Siswa extends Controller
             $query->where('penginput', Auth::id())
                 ->orWhere('approver_umum_id', Auth::id())
                 ->orWhere('approver_bk_id', Auth::id());
-            })
+        })
             ->whereNotIn('status', [5, 10])
             ->latest()
             ->first();
@@ -59,7 +61,7 @@ class C_Siswa extends Controller
         return view('siswa.guru-approve', compact('data', 'guruBk', 'guruUmum', 'guruUmumFirst'));
     }
 
-    
+
     public function storeSession(Request $request)
     {
         session(['izin_data' => $request->all()]); //simpen dulu di session
@@ -99,25 +101,13 @@ class C_Siswa extends Controller
 
         return redirect()->route('status_izin-siswa');
     }
-    
+
     public function statusIzin()
     {
-        $izin = Perizinan::where(function ($query) {
-            $query->where('penginput', Auth::id())
-                ->orWhere('approver_umum_id', Auth::id())
-                ->orWhere('approver_bk_id', Auth::id());
-            })
+        $izin = Perizinan::where('penginput', Auth::id())
             ->whereNotIn('status', [5, 10])
             ->latest()
-            ->first(); // ambil 1 terbaru
-        // dd($izin);
-        // 0 dibuat
-        // 1 approved guru umum
-        // 2 approved guru bk
-        // 3 reject guru umum
-        // 4 reject guru bk
-        // 5 batal pengajuan
-        // 10 berhasil pengajuan / approved satpam
+            ->first();
 
         return view('siswa.status-izin', compact('izin'));
     }
@@ -139,15 +129,15 @@ class C_Siswa extends Controller
     public function riwayatIzinSiswa()
     {
         $semuaIzin = Perizinan::where(function ($query) {
-                $query->where('penginput', Auth::id());
-            })
-            ->whereNotIn('status', [0,1,2,5])
+            $query->where('penginput', Auth::id());
+        })
+            ->whereNotIn('status', [0, 1, 2, 5])
             ->orderBy('created_at', 'desc')
             ->get();
 
         // mapping status
         $izinDisetujui = $semuaIzin->whereIn('status', [10]);
-        $izinDitolak   = $semuaIzin->whereIn('status', [3,4]);
+        $izinDitolak   = $semuaIzin->whereIn('status', [3, 4]);
 
         // grouping by tanggal
         \Carbon\Carbon::setLocale('id');
@@ -165,5 +155,13 @@ class C_Siswa extends Controller
             'groupDitolak',
             'semuaIzin'
         ));
+    }
+
+    public function downloadPDF($id)
+    {
+        \Carbon\Carbon::setLocale('id'); 
+        $izin = Perizinan::findOrFail($id);
+        $pdf = Pdf::loadView('pdf.surat-izin', compact('izin'));
+        return $pdf->stream('Surat_Izin_' . $izin->nama . '.pdf');
     }
 }
