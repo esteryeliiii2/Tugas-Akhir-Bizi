@@ -2,7 +2,7 @@
 
 @section('content')
 
-@if (count($semuaIzin) == 0)
+@if (count($groupData) == 0)
 
 <!-- empty state -->
 <div id="empty-state">
@@ -76,7 +76,7 @@
     </div>
 </div>
 
-@foreach($groupDisetujui as $tanggal => $items)
+@foreach($groupData as $tanggal => $items)
 
 <div class="section-item">
 
@@ -97,7 +97,7 @@
                         @if (in_array($izin->status, [0,1]))
                         <iconify-icon icon="mdi:clock"></iconify-icon>
                         @elseif (in_array($izin->status, [3,4]))
-                        <iconify-icon-red icon="mdi:clock"></iconify-icon-red>
+                        <iconify-icon icon="mdi:clock"></iconify-icon>
                         @elseif (in_array($izin->status, [2,10]))
                         <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #1DB366;"></iconify-icon>
                         @endif
@@ -109,12 +109,10 @@
 
                         <div class="izin-row">
                             <div class="izin-title">
-                                @if ($izin->status == 0)
-                                    Sedang Ditinjau Oleh Guru Kelas
-                                @elseif ($izin->status == 1)
-                                    Sedang Ditinjau Oleh Guru BK
-                                @elseif ($izin->status == 2)
-                                    Pengajuan Telah Disetujui
+                                @if ($izin->status == 3)
+                                    Pengajuan Telah Ditolak oleh Guru Umum
+                                @elseif ($izin->status == 4)
+                                    Pengajuan Telah Ditolak oleh Guru BK
                                 @elseif ($izin->status == 10)
                                     Pengajuan Telah Disetujui
                                 @endif
@@ -123,13 +121,9 @@
                             <div class="izin-user">
                                 <img src="{{ asset('images/guru cowo.png') }}">
                                 <span>
-                                    @if ($izin->status == 0)
+                                    @if ($izin->status == 3)
                                         {{ $izin->approver_umum }}
-                                    @elseif ($izin->status == 1)
-                                        {{ $izin->approver_bk }}
-                                    @elseif ($izin->status == 2)
-                                        {{ $izin->approver_umum }}
-                                    @elseif ($izin->status == 3)
+                                    @elseif ($izin->status == 4)
                                         {{ $izin->approver_bk }}
                                     @elseif ($izin->status == 10)
                                         {{ $izin->approver_umum }}
@@ -350,6 +344,24 @@
     function closePopup() {
         document.getElementById("popup-detail").style.display = "none";
     }
+
+    document.querySelectorAll(".dropdown").forEach(drop => {
+        const btn = drop.querySelector(".dropdown-btn");
+        const items = drop.querySelectorAll(".dropdown-content div");
+
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
+            drop.classList.toggle("active");
+        });
+
+        items.forEach(item => {
+            item.addEventListener("click", () => {
+                btn.firstChild.textContent = item.innerText + " ";
+                drop.classList.remove("active");
+            });
+        });
+    });
 </script>
 
 @endsection

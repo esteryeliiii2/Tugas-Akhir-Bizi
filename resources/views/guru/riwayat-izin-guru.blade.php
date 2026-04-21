@@ -18,6 +18,21 @@ $dataIzin = [
 @endphp --}}
 
 
+@if (count($groupData) == 0)
+
+<!-- EMPTY STATE -->
+<div class="empty-state-guru">
+    <div class="empty-icon">
+        <img src="{{ asset('images/no izin.png') }}" alt="izin">
+    </div>
+    <div class="empty-title">Belum Ada Pengajuan Izin</div>
+    <div class="empty-desc">
+        Ajukan izin melalui formulir untuk memulai proses perizinan.
+    </div>
+</div>
+
+@else
+
 <div class="page-header" style="margin-bottom: 24px;">
 
     <h1 class="page-title">Riwayat Pengajuan Izin</h1>
@@ -62,22 +77,8 @@ $dataIzin = [
     </div>
 </div>
 
-@if (count($groupDisetujui) == 0 && count($groupDitolak) == 0)
 
-<!-- EMPTY STATE -->
-<div class="empty-state-guru">
-    <div class="empty-icon">
-        <img src="{{ asset('images/no izin.png') }}" alt="izin">
-    </div>
-    <div class="empty-title">Belum Ada Pengajuan Izin</div>
-    <div class="empty-desc">
-        Ajukan izin melalui formulir untuk memulai proses perizinan.
-    </div>
-</div>
-
-@else
-
-@foreach($groupDisetujui as $tanggal => $items)
+@foreach($groupData as $tanggal => $items)
 
 <div class="section-item" data-status="disetujui">
 
@@ -110,9 +111,15 @@ $dataIzin = [
             </div>
 
             <div class="action">
+                @if ($izin->status == 10)
                 <span class="badge-status disetujui">
                     Perizinan Disetujui ✓
                 </span>
+                @else
+                <span class="badge-status ditolak">
+                    Perizinan Ditolak ✕
+                </span>
+                @endif
                 <span class="arrow" id="arrow-izin-{{ $tanggal }}-{{ $index }}">⌄</span>
             </div>
         </div>
@@ -185,154 +192,6 @@ $dataIzin = [
                             <div class="value small">
                                 {{ $izin->jam_selesai ? $izin->jam_selesai->format('H:i') : 'Tidak Kembali' }}
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card-header-none">
-                        <span class="card-number" style="color: #7ABAFF;">03.</span>
-                        <span class="card-title" style="margin-bottom: 0px;">Informasi Guru</span>
-                    </div>
-                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                            GURU BK
-                        </label>
-                        <div class="value guru">
-                            <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
-                            <span>{{ $izin->approver_bk }}</span>
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                            GURU UMUM
-                        </label>
-                        <div class="value guru small">
-                            <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
-                            <span>{{ $izin->approver_umum }}</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-    @endforeach
-
-</div>
-
-@endforeach
-
-@foreach($groupDitolak as $tanggal => $items)
-
-<div class="section-item" data-status="ditolak">
-
-    <div class="section-title" style="margin-top: 32px; font-size: 14px;">
-        {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('l, d F Y') }}
-    </div>
-
-    @foreach($items as $index => $izin)
-    <div class="card-izinn">
-
-        <div class="card-header-izin" data-index="izin-{{ $tanggal }}-{{ $index }}" onclick="toggleCard(this)">
-
-            <div class="left-header">
-
-                <img src="{{ asset('images/profile.png') }}" class="avatar">
-
-                <div>
-                    <div class="tanggal">
-                        {{ $izin->created_at->format('d M Y, H:i') }} WIB
-                    </div>
-
-                    <div class="nama-row">
-                        <div class="nama">{{ $izin->nama }}</div>
-
-                        <span class="badge siswa">SISWA</span>
-                        <span class="badge sija">{{ $izin->jurusan }}</span>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="action">
-                <span class="badge-status ditolak">
-                    Perizinan Ditolak ✕
-                </span>
-                <span class="arrow" id="arrow-izin-{{ $tanggal }}-{{ $index }}">⌄</span>
-            </div>
-        </div>
-
-        <div class="card-body" id="card-izin-{{ $tanggal }}-{{ $index }}" style="display: none;">
-            <hr class="line-data">
-
-            <div class="grid">
-
-                <div class="col">
-                    <div class="card-header-none">
-                        <span class="card-number" style="color: #7ABAFF;">01.</span>
-                        <span class="card-title" style="margin-bottom: 0px;">Data Siswa</span>
-                    </div>
-                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                            NAMA
-                        </label>
-                        <div class="value" style="width: 100%;">{{ $izin->nama }}</div>
-                    </div>
-
-                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                            NO URUT
-                        </label>
-                        <div class="value" style="text-align: center; width: 100%;">{{ $izin->no_presensi }}</div>
-                    </div>
-
-                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                            KELAS
-                        </label>
-                        <div class="value" style="width: 100%;">
-                            {{ [
-                                    10 => 'X (10)',
-                                    11 => 'XI (11)',
-                                    12 => 'XII (12)',
-                                    13 => 'XIII (13)'
-                                ][$izin->kelas] ?? '-' }}
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                            JURUSAN
-                        </label>
-                        <div class="value" style="width: 100%;">{{ $izin->jurusan }}</div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card-header-none">
-                        <span class="card-number" style="color: #7ABAFF;">02.</span>
-                        <span class="card-title" style="margin-bottom: 0px;">Detail Izin</span>
-                    </div>
-                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                            KEPERLUAN
-                        </label>
-                        <div class="value" style="width: 100%;">{{ $izin->keperluan }}</div>
-                    </div>
-
-                    <div class="row" style="margin-bottom: 20px; width: fit-content;">
-                        <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                            JAM IZIN
-                        </label>
-                        <div class="jam-wrapper">
-                            <div class="value small">{{ $izin->jam_mulai->format('H:i') }}</div>
-                            <span class="arrow">→</span>
-                           <div class="value small">
-                            {{ $izin->jam_selesai ? $izin->jam_selesai->format('H:i') : 'Tidak Kembali' }}
-                        </div>
                         </div>
                     </div>
                 </div>

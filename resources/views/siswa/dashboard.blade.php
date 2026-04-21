@@ -125,7 +125,7 @@
                     @if (in_array($izin->status, [0,1]))
                     <iconify-icon icon="mdi:clock"></iconify-icon>
                     @elseif (in_array($izin->status, [3,4]))
-                    <iconify-icon-red icon="mdi:clock"></iconify-icon-red>
+                    <iconify-icon icon="mdi:clock"></iconify-icon>
                     @elseif (in_array($izin->status, [2,10]))
                     <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #1DB366;"></iconify-icon>
                     @endif
@@ -140,16 +140,21 @@
                     <div class="izin-row">
                         <div class="izin-title">
                             @if ($izin->status == 0)
-                                Sedang Ditinjau Oleh Guru Kelas
+                            Sedang Ditinjau Oleh Guru Kelas
                             @elseif ($izin->status == 1)
-                                Sedang Ditinjau Oleh Guru BK
+                            Sedang Ditinjau Oleh Guru BK
                             @elseif ($izin->status == 2)
-                                Pengajuan Telah Disetujui
+                            Perizinan Telah Disetujui
                             @elseif ($izin->status == 3)
-                                Pengajuan Telah Disetujui
+                            Perizinan Telah Ditolak oleh Guru Kelas
+                            @elseif ($izin->status == 4)
+                            Perizinan Telah Ditolak oleh Guru BK
+                            @elseif ($izin->status == 10)
+                            Verifikasi QR Code Berhasil
                             @endif
                         </div>
 
+                        @if ($izin->status !== 10)
                         <div class="izin-user">
                             <img src="{{ asset('images/guru cowo.png') }}">
                             <span>
@@ -158,10 +163,15 @@
                                 @elseif ($izin->status == 1)
                                     {{ $izin->approver_bk }}
                                 @elseif ($izin->status == 2)
-                                    Satpam
+                                    {{ $izin->approver_bk }}
+                                @elseif ($izin->status == 3)
+                                    {{ $izin->approver_umum }}
+                                @elseif ($izin->status == 4)
+                                    {{ $izin->approver_bk }}
                                 @endif
                             </span>
                         </div>
+                        @endif
                     </div>
 
                 </div>
@@ -192,13 +202,13 @@
         <div class="line active"></div>
 
         <div class="step-item">
-            <div class="step {{ in_array($izin->status, [1,2,10]) ? 'done' : 'active' }}">
-                <div class="dot">{{ in_array($izin->status, [1,2,10]) ? '✓' : '2' }}</div>
+            <div class="step {{ in_array($izin->status, [1,2,4,10]) ? 'done' : 'active' }}">
+                <div class="dot">{{ in_array($izin->status, [1,2,4,10]) ? '✓' : '2' }}</div>
                 <p>Persetujuan Guru<br>Kelas (Umum)</p>
             </div>
         </div>
 
-        <div class="line {{ in_array($izin->status, [1,2,10]) ? 'active' : '' }}"></div>
+        <div class="line {{ in_array($izin->status, [1,2,4,10]) ? 'active' : '' }}"></div>
 
         <div class="step-item">
             <div class="step {{ in_array($izin->status, [2,10]) ? 'done' : '' }}{{ $izin->status == 1 ? 'active' : '' }}">

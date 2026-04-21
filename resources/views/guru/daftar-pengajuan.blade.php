@@ -71,8 +71,10 @@ $dataIzin = [
             </div>
 
             <div class="action">
+                @if ($user->jabatan == 'guru umum' && $izin->status == 0 || $user->jabatan == 'guru bk' && $izin->status == 1)
                 <button type="button" class="btn-tolak" onclick="event.stopPropagation(); openModalTolak({{ $izin->id }})">Tolak ✕</button>
                 <button type="button" class="btn-setuju" onclick="event.stopPropagation(); openModalSetuju({{ $izin->id }})">Setujui ✓</button>
+                @endif
                 <span class="arrow" id="arrow-menunggu-{{ $index }}">⌄</span>
             </div>
         </div>

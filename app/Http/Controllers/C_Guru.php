@@ -13,6 +13,7 @@ class C_Guru extends Controller
 
     public function index()
     {
+        $user = Auth::user();
         $izin = Perizinan::where(function ($query) {
             $query->where('penginput', Auth::id())
                 ->orWhere('approver_umum_id', Auth::id())
@@ -23,15 +24,22 @@ class C_Guru extends Controller
         // dd($totalIzin);
 
         $totalPengajuan = $izin->count();
-        $pengajuanDisetujui = $izin->whereIn('status', [1,2,10])->count();
-        $pengajuanDitolak = $izin->whereIn('status', [3,4])->count();
-        $dataIzin = $izin->where('status', 0);
+        if ($user->jabatan == 'guru umum') {
+            $dataIzin = $izin->where('status', 0);
+            $pengajuanDisetujui = $izin->whereIn('status', [1, 2, 10])->count();
+            $pengajuanDitolak = $izin->whereIn('status', [3, 4])->count();
+        } elseif ($user->jabatan == 'guru bk') {
+            $dataIzin = $izin->where('status', 1);
+            $pengajuanDisetujui = $izin->whereIn('status', [2, 10])->count();
+            $pengajuanDitolak = $izin->where('status', 4)->count();
+        }
 
         return view('guru.dashboard-guru', compact(
             'dataIzin',
             'totalPengajuan',
             'pengajuanDisetujui',
-            'pengajuanDitolak'
+            'pengajuanDitolak',
+            'user'
         ));
     }
 
@@ -72,6 +80,7 @@ class C_Guru extends Controller
 
     public function daftarPengajuan()
     {
+        $user = Auth::user();
         $semuaIzin = Perizinan::where(function ($query) {
             $query->where('penginput', Auth::id())
                 ->orWhere('approver_umum_id', Auth::id())
@@ -81,47 +90,55 @@ class C_Guru extends Controller
             ->get();
         // dd($totalIzin);
 
-        $pengajuanMenunggu = $semuaIzin->where('status', 0);
-        $pengajuanDisetujui = $semuaIzin->whereIn('status', [1,2,10]);
-        $pengajuanDitolak = $semuaIzin->whereIn('status', [3,4]);
+        $pengajuanDisetujui = $semuaIzin->whereIn('status', [2, 10]);
+        if ($user->jabatan == 'guru umum') {
+            $pengajuanMenunggu = $semuaIzin->whereIn('status', [0, 1]);
+            $pengajuanDitolak = $semuaIzin->whereIn('status', [3, 4]);
+        } elseif ($user->jabatan == 'guru bk') {
+            $semuaIzin = $semuaIzin->whereIn('status', [1, 2, 4, 10]);
+            $pengajuanMenunggu = $semuaIzin->whereIn('status', [1]);
+            $pengajuanDitolak = $semuaIzin->whereIn('status', [4]);
+        }
 
         return view('guru.daftar-pengajuan', compact(
             'semuaIzin',
             'pengajuanMenunggu',
             'pengajuanDisetujui',
-            'pengajuanDitolak'
+            'pengajuanDitolak',
+            'user'
         ));
     }
 
     public function riwayatIzinGuru()
     {
+        $user = Auth::user();
         $semuaIzin = Perizinan::where(function ($query) {
                 $query->where('penginput', Auth::id())
                     ->orWhere('approver_umum_id', Auth::id())
                     ->orWhere('approver_bk_id', Auth::id());
             })
-            ->whereNotIn('status', [5])
+            ->whereNotIn('status', [0, 1, 2, 5])
             ->orderBy('created_at', 'desc')
             ->get();
 
         // mapping status
-        $izinDisetujui = $semuaIzin->whereIn('status', [1,2,10]);
-        $izinDitolak   = $semuaIzin->whereIn('status', [3,4]);
+        if ($user->jabatan == 'guru umum') {
+            $izinData = $semuaIzin->whereIn('status', [3, 4, 10]);
+        } elseif ($user->jabatan == 'guru bk') {
+            $izinData = $semuaIzin->whereIn('status', [4, 10]);
+        }
 
         // grouping by tanggal
         \Carbon\Carbon::setLocale('id');
 
-        $groupDisetujui = $izinDisetujui->groupBy(function ($item) {
-            return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
-        });
-
-        $groupDitolak = $izinDitolak->groupBy(function ($item) {
+        $groupData = $izinData->groupBy(function ($item) {
             return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
         });
 
         return view('guru.riwayat-izin-guru', compact(
-            'groupDisetujui',
-            'groupDitolak'
+            'groupData',
+            'user'
+            // 'groupDitolak'
         ));
     }
 }

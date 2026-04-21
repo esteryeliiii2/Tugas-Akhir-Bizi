@@ -53,7 +53,7 @@ $izin = true;
             <div class="form-card">
                 <div class="izin-left-2">
                     <div class="izin-icon">
-                        @if ($izin->status == 2)
+                        @if (in_array($izin->status, [2, 10]))
                         <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #1DB366;"></iconify-icon>
                         @else
                         <iconify-icon icon="mdi:clock"></iconify-icon>
@@ -75,6 +75,12 @@ $izin = true;
                                     Sedang Ditinjau Oleh Guru BK
                                     @elseif ($izin->status == 2)
                                     Perizinan Telah Disetujui
+                                    @elseif ($izin->status == 3)
+                                    Perizinan Telah Ditolak oleh Guru Kelas
+                                    @elseif ($izin->status == 4)
+                                    Perizinan Telah Ditolak oleh Guru BK
+                                    @elseif ($izin->status == 10)
+                                    Verifikasi QR Code Berhasil
                                     @endif
                                 </div>
                             </div>
@@ -200,14 +206,14 @@ $izin = true;
         <div class="izin-steps">
 
             <div class="step active">
-                <div class="step-number">{{ in_array($izin->status, [0,1,2,10]) ? '✓' : '1' }}</div>
+                <div class="step-number">{{ in_array($izin->status, [0,1,2,3,4,10]) ? '✓' : '1' }}</div>
                 <div>
                     <div class="step-title">Isi Formulir Perizinan</div>
                     <p>Lengkapi formulir pengajuan izin dengan data dan alasan yang jelas.</p>
                 </div>
             </div>
 
-            <div class="step {{ in_array($izin->status, [0,1,2,4,10]) ? 'active' : '' }}">
+            <div class="step {{ in_array($izin->status, [0,1,2,3,4,10]) ? 'active' : '' }}">
                 <div class="step-number">{{ in_array($izin->status, [1,2,4,10]) ? '✓' : '2' }}</div>
                 <div>
                     <div class="step-title">Persetujuan Guru Kelas (Umum)</div>
@@ -215,7 +221,7 @@ $izin = true;
                 </div>
             </div>
 
-            <div class="step {{ in_array($izin->status, [1,2,10]) ? 'active' : '' }}">
+            <div class="step {{ in_array($izin->status, [1,2,4,10]) ? 'active' : '' }}">
                 <div class="step-number">{{ in_array($izin->status, [2,10]) ? '✓' : '3' }}</div>
                 <div>
                     <div class="step-title">Persetujuan Guru BK</div>

@@ -57,14 +57,9 @@
 
                         <div class="menu-title">LAINNYA</div>
 
-                        <a href="#">
+                        <a href="/tutorial-izin" class="{{ request()->is('tutorial-izin') ? 'active' : '' }}">
                             <iconify-icon icon="lucide:info" width="18"></iconify-icon>
                             Tutorial Perizinan
-                        </a>
-
-                        <a href="#">
-                            <iconify-icon icon="lsicon:setting-outline" width="18"></iconify-icon>
-                            Pengaturan
                         </a>
 
                     </div>
@@ -76,32 +71,31 @@
 
             <div class="sidebar-bottom">
 
-                <div class="user-card">
+                <a href="{{ route('profile-siswa') }}" class="user-card-link">
+                    <div class="user-card">
+                        <div class="avatar">{{ $initials ? $initials : 'NR' }}</div>
+                        <div class="user-info">
 
-                    <div class="avatar">{{ $initials ? $initials : 'NR' }}</div>
+                            <div class="user-name">
+                                {{ $user->nama ? $user->nama : 'Nicholas Daniel Raditya' }}
+                            </div>
 
-                    <div class="user-info">
+                            <div class="user-meta">
+                                <span class="badge">{{ $user->jabatan ? strtoupper($user->jabatan) : 'SISWA' }}</span>
+                                <span class="nis">
+                                    @if($user->nis)
+                                        {{ $user->nis }}
+                                    @elseif($user->nip)
+                                        {{ $user->nip }}
+                                    @else
+                                        224111999
+                                    @endif
+                                </span>
+                            </div>
 
-                        <div class="user-name">
-                            {{ $user->nama ? $user->nama : 'Nicholas Daniel Raditya' }}
                         </div>
-
-                        <div class="user-meta">
-                            <span class="badge">{{ $user->jabatan ? strtoupper($user->jabatan) : 'SISWA' }}</span>
-                            <span class="nis">
-                                @if($user->nis)
-                                    {{ $user->nis }}
-                                @elseif($user->nip)
-                                    {{ $user->nip }}
-                                @else
-                                    224111999
-                                @endif
-                            </span>
-                        </div>
-
                     </div>
-
-                </div>
+                </a>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

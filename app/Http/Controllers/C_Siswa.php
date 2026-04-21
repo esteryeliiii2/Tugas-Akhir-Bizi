@@ -136,24 +136,23 @@ class C_Siswa extends Controller
             ->get();
 
         // mapping status
-        $izinDisetujui = $semuaIzin->whereIn('status', [10]);
-        $izinDitolak   = $semuaIzin->whereIn('status', [3, 4]);
+        $izinData = $semuaIzin->whereIn('status', [3, 4, 10]);
+        // $izinDitolak   = $semuaIzin->whereIn('status', [3, 4]);
 
         // grouping by tanggal
         \Carbon\Carbon::setLocale('id');
 
-        $groupDisetujui = $izinDisetujui->groupBy(function ($item) {
+        $groupData = $izinData->groupBy(function ($item) {
             return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
         });
 
-        $groupDitolak = $izinDitolak->groupBy(function ($item) {
-            return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
-        });
+        // $groupDitolak = $izinDitolak->groupBy(function ($item) {
+        //     return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
+        // });
 
         return view('siswa.riwayat-izin-siswa', compact(
-            'groupDisetujui',
-            'groupDitolak',
-            'semuaIzin'
+            'groupData',
+            // 'groupDitolak'
         ));
     }
 
