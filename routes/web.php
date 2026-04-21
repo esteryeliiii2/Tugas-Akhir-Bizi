@@ -41,3 +41,5 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/surat-izin/{id}', [C_Siswa::class, 'downloadPDF'])->name('surat-izin');
