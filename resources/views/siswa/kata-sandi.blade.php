@@ -19,7 +19,9 @@
 
 </div>
 
-<div class="card-profil">
+<form action="{{ route('kata_sandi-siswa') }}" method="POST">
+    @csrf
+    <div class="card-profil">
 
     <div class="profil-sandi">
         <div class="card-group">
@@ -30,11 +32,14 @@
         </div>
         <div class="card-avatar">
             <div class="text-avatar password-group">
-                <input type="password" id="currentPassword" placeholder="Masukkan kata sandi" class="input-password">
+                <input type="password" name="current_password" id="currentPassword" placeholder="Masukkan kata sandi" class="input-password">
                 <iconify-icon icon="mdi:eye-off-outline" class="toggle-password" onclick="togglePassword('currentPassword', this)"></iconify-icon>
             </div>
 
         </div>
+        @error('current_password')
+            <small style="color:red">{{ $message }}</small>
+        @enderror
     </div>
 
     <div class="profil-sandi">
@@ -46,9 +51,9 @@
         </div>
         <div class="card-avatar">
            <div class="text-avatar password-group">
-    <input type="password" id="newPassword" placeholder="Masukkan kata sandi baru" class="input-password">
-    <iconify-icon icon="mdi:eye-off-outline" class="toggle-password" onclick="togglePassword('newPassword', this)"></iconify-icon>
-</div>
+                <input type="password" name="password" id="newPassword" placeholder="Masukkan kata sandi baru" class="input-password">
+                <iconify-icon icon="mdi:eye-off-outline" class="toggle-password" onclick="togglePassword('newPassword', this)"></iconify-icon>
+            </div>
 
         </div>
     </div>
@@ -62,18 +67,23 @@
         </div>
         <div class="card-avatar">
            <div class="text-avatar password-group">
-    <input type="password" id="confirmPassword" placeholder="Konfirmasi kata sandi baru" class="input-password">
-    <iconify-icon icon="mdi:eye-off-outline" class="toggle-password" onclick="togglePassword('confirmPassword', this)"></iconify-icon>
-</div>
+                <input type="password" name="password_confirmation" id="confirmPassword" placeholder="Konfirmasi kata sandi baru" class="input-password">
+                <iconify-icon icon="mdi:eye-off-outline" class="toggle-password" onclick="togglePassword('confirmPassword', this)"></iconify-icon>
+            </div>
         </div>
+        @error('password')
+            <small style="color:red">{{ $message }}</small>
+        @enderror
     </div>
 
     <div class="profil-action">
-        <button class="btn-primary">
+        <button type="submit" class="btn-primary">
             Ubah Kata Sandi
         </button>
     </div>
-</div>
+    
+    </div>
+</form>
 
 <script>
 function togglePassword(id, icon) {
@@ -81,7 +91,7 @@ function togglePassword(id, icon) {
 
     if (input.type === "password") {
         input.type = "text";
-        icon.setAttribute("icon", "mdi: ");
+        icon.setAttribute("icon", "mdi:eye-outline");
     } else {
         input.type = "password";
         icon.setAttribute("icon", "mdi:eye-off-outline");

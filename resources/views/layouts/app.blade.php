@@ -71,9 +71,22 @@
 
             <div class="sidebar-bottom">
 
-                <a href="{{ route('profile-siswa') }}" class="user-card-link">
+                <a href="{{ $user->jabatan == 'siswa' ? route('profile-siswa') : route('profile-guru') }}" class="user-card-link">
                     <div class="user-card">
-                        <div class="avatar">{{ $initials ? $initials : 'NR' }}</div>
+                        <div class="avatar"
+                            style="
+                            @if($user->foto)
+                                background-image: url('{{ asset('storage/' . $user->foto) }}');
+                                background-size: cover;
+                                background-position: center;
+                            @endif
+                            ">
+                            
+                            @if(!$user->foto)
+                                {{ $initials }}
+                            @endif
+
+                        </div>
                         <div class="user-info">
 
                             <div class="user-name">

@@ -8,6 +8,7 @@ use App\Models\Perizinan;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 
 class C_Siswa extends Controller
@@ -162,5 +163,73 @@ class C_Siswa extends Controller
         $izin = Perizinan::findOrFail($id);
         $pdf = Pdf::loadView('pdf.surat-izin', compact('izin'));
         return $pdf->stream('Surat_Izin_' . $izin->nama . '.pdf');
+    }
+
+    public function profileSiswa()
+    {
+        $user = Auth::user();
+
+        $words = explode(' ', $user->nama);
+        $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+        
+        return view('siswa.profile-siswa', compact('user', 'initials'));
+    }
+
+    public function updateProfileSiswa(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:40',
+            'email' => 'required|email|max:90',
+            // 'email' => 'required|email:rfc,dns|max:90|unique:users,email,' . Auth::id() //pake kalo nanti mau lebih ketat
+            'foto' => 'nullable|image|mimes:jpg,png|max:2048'
+        ]);
+
+        $user = Auth::user();
+
+        // upload foto
+        if ($request->hasFile('foto')) {
+            if ($user->foto) {
+                Storage::disk('public')->delete($user->foto);
+            }
+
+            $path = $request->file('foto')->store('foto-profil', 'public');
+            $user->foto = $path;
+        } else if ($request->hapusFoto == 0) {
+            if ($user->foto) {
+                Storage::disk('public')->delete($user->foto);
+            }
+
+            $user->foto = null;
+        }
+        // dd($request);
+
+        $user->nama = $request->nama;
+        $user->email = $request->email;
+        $user->save();
+
+        return back()->with('success', 'Profil berhasil diupdate');
+    }
+
+    public function viewPasswordSiswa()
+    {
+        $user = Auth::user();
+
+        return view('siswa.kata-sandi', compact('user'));
+    }
+
+    public function updatePasswordSiswa(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', 'min:6']
+        ]);
+
+        $user = Auth::user();
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        // return back()->with('success', 'Password berhasil diubah');
+        return redirect()->route('profile-siswa')
+            ->with('success', 'Password berhasil diubah');
     }
 }

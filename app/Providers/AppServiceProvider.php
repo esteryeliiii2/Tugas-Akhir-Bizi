@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         if (Auth::check()) {
             $user = Auth::user();
 
-            $words = explode(' ', $user->name);
+            $words = explode(' ', $user->nama);
             $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
 
             $view->with('user', $user)

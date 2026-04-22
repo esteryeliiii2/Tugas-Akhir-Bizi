@@ -25,13 +25,11 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
         return view('siswa.tutorial-izin');
     })->name('tutorial-izin');
 
-    Route::get('/profile-siswa', function () {
-        return view('siswa.profile-siswa');
-    })->name('profile-siswa');
+    Route::get('/profile-siswa', [C_Siswa::class, 'profileSiswa'])->name('profile-siswa');
+    Route::post('/profile-siswa', [C_Siswa::class, 'updateProfileSiswa']);
 
-    Route::get('/kata-sandi', function () {
-        return view('siswa.kata-sandi');
-    })->name('kata-sandi');
+    Route::get('/kata-sandi', [C_Siswa::class, 'viewPasswordSiswa'])->name('kata_sandi-siswa');
+    Route::post('/kata-sandi', [C_Siswa::class, 'updatePasswordSiswa']);
 });
 
 //guru
@@ -42,9 +40,8 @@ Route::middleware(['auth', 'role:guru umum,guru bk'])->group(function () {
     Route::get('/riwayat-izin-guru', [C_Guru::class, 'riwayatIzinGuru'])->name('riwayat-izin-guru');
     Route::post('/persetujuan-guru', [C_Guru::class, 'persetujuanGuru'])->name('persetujuan-guru');
 
-    Route::get('/profile-guru', function () {
-        return view('guru.profile-guru');
-    })->name('profile-guru');
+    Route::get('/profile-guru', [C_Guru::class, 'profileGuru'])->name('profile-guru');
+    Route::post('/profile-guru', [C_Guru::class, 'updateProfileGuru']);
 });
 
 // PDF Surat Izin

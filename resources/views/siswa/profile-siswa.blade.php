@@ -12,95 +12,113 @@
 
 </div>
 
-<div class="card-profil">
-    <div class="profil">
-        <div class="card-group">
-            <div class="title-profil">FOTO PROFIL</div>
-            <div class="card-desc">
-                Foto profil akun siswa
-            </div>
-        </div>
-        <div class="card-avatar">
-            <div class="avatar-profile" id="previewAvatar">NR</div>
-            <div class="text-avatar">
-                <input type="file" id="uploadFoto" accept="image/*" hidden>
-                <button type="button" class="ubah-profile"
-                    onclick="document.getElementById('uploadFoto').click()">
-                    Ubah Foto Profil
-                    <iconify-icon icon="flowbite:edit-outline" class="edit-icon"></iconify-icon>
-                </button>
-                <button type="button" class="hapus-profile" id="btnHapusFoto" style="display: none;"
-                    onclick="hapusFoto()">
-                    Hapus Foto
-                    <iconify-icon icon="mi:delete" class="delete-icon"></iconify-icon>
-                </button>
+<form action="{{ route('profile-siswa') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="card-profil">
+        <div class="profil">
+            <div class="card-group">
+                <div class="title-profil">FOTO PROFIL</div>
                 <div class="card-desc">
-                    Format JPG/PNG. Gunakan foto yang jelas dan sopan.
+                    Foto profil akun siswa
                 </div>
             </div>
+            <div class="card-avatar">
+                <div class="avatar-profile" id="previewAvatar"
+                    style="
+                    @if($user->foto)
+                        background-image: url('{{ asset('storage/' . $user->foto) }}');
+                        background-size: cover;
+                        background-position: center;
+                    @endif
+                    ">
+                    
+                    @if(!$user->foto)
+                        {{ $initials }}
+                    @endif
 
+                </div>
+                <div class="text-avatar">
+                    <input type="file" name="foto" id="uploadFoto" accept=".jpg,.jpeg,.png" hidden>
+                    <input type="text" name="hapusFoto" id="inputHapusFoto" value="{{ $user->foto ? 1 : 0 }}" hidden>
+                    <button type="button" class="ubah-profile"
+                        onclick="document.getElementById('uploadFoto').click()">
+                        Ubah Foto Profil
+                        <iconify-icon icon="flowbite:edit-outline" class="edit-icon"></iconify-icon>
+                    </button>
+                    <button type="button" class="hapus-profile" id="btnHapusFoto" style="{{ $user->foto ? 'display: inline-block' : 'display: none' }}"
+                        onclick="handleHapusFoto()">
+                        Hapus Foto
+                        <iconify-icon icon="mi:delete" class="delete-icon"></iconify-icon>
+                    </button>
+                    <div class="card-desc">
+                        Format JPG/PNG. Gunakan foto yang jelas dan sopan.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="profil">
+            <div class="card-group">
+                <div class="title-profil">NAMA</div>
+                <div class="card-desc">
+                    Nama lengkap siswa
+                </div>
+            </div>
+            <div class="card-avatar">
+                <div class="text-avatar">
+                    <input name="nama" class="value-profil" value="{{ $user->nama }}">
+                </div>
+
+            </div>
+        </div>
+
+        <div class="profil">
+            <div class="card-group">
+                <div class="title-profil">NIS</div>
+                <div class="card-desc">
+                    Nomor induk siswa
+                </div>
+            </div>
+            <div class="card-avatar">
+                <div class="text-avatar">
+                    <div class="value-profil-none">{{ $user->nis }}</div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="profil">
+            <div class="card-group">
+                <div class="title-profil">EMAIL</div>
+                <div class="card-desc">
+                    Email aktif siswa
+                </div>
+            </div>
+            <div class="card-avatar">
+                <div class="text-avatar">
+                    <input name="email" class="value-profil" value="{{ $user->email ? $user->email : '-' }}">
+                </div>
+
+            </div>
+        </div>
+
+        <div class="profil-action">
+            <a class="btn-secondary" href="{{ route('kata_sandi-siswa') }}" style="color:black;text-decoration:none">
+                Ubah Kata Sandi
+                <iconify-icon icon="mdi:lock-outline"></iconify-icon>
+            </a>
+
+            <button type="submit" class="btn-primary">
+                Simpan Perubahan
+            </button>
         </div>
     </div>
-
-    <div class="profil">
-        <div class="card-group">
-            <div class="title-profil">NAMA</div>
-            <div class="card-desc">
-                Nama lengkap siswa
-            </div>
-        </div>
-        <div class="card-avatar">
-            <div class="text-avatar">
-                <div class="value-profil">Nicholas Daniel Raditya</div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="profil">
-        <div class="card-group">
-            <div class="title-profil">NIS</div>
-            <div class="card-desc">
-                Nomor induk siswa
-            </div>
-        </div>
-        <div class="card-avatar">
-            <div class="text-avatar">
-                <div class="value-profil-none">224119999</div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="profil">
-        <div class="card-group">
-            <div class="title-profil">EMAIL</div>
-            <div class="card-desc">
-                Email aktif siswa
-            </div>
-        </div>
-        <div class="card-avatar">
-            <div class="text-avatar">
-                <div class="value-profil">nicholasdaniel@gmail.com</div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="profil-action">
-        <button class="btn-secondary" onclick="window.location.href='kata-sandi'">
-            Ubah Kata Sandi
-            <iconify-icon icon="mdi:lock-outline"></iconify-icon>
-        </button>
-
-        <button class="btn-primary">
-            Simpan Perubahan
-        </button>
-    </div>
-</div>
+</form>
 
 <script>
 const uploadFoto = document.getElementById('uploadFoto');
+const isHapusFoto = document.getElementById('inputHapusFoto');
 const previewAvatar = document.getElementById('previewAvatar');
 const btnHapus = document.getElementById('btnHapusFoto');
 
@@ -120,14 +138,16 @@ uploadFoto.addEventListener('change', function(event) {
         }
 
         reader.readAsDataURL(file);
+        isHapusFoto.value = 1;
     }
 });
 
-function hapusFoto() {
+function handleHapusFoto() {
     previewAvatar.style.backgroundImage = '';
-    previewAvatar.innerHTML = 'NR';
+    previewAvatar.innerHTML = '{{ $initials }}';
 
     uploadFoto.value = ''; 
+    isHapusFoto.value = 0; 
     btnHapus.style.display = 'none'; 
 }
 </script>

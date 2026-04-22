@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Perizinan;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class C_Guru extends Controller
 {
@@ -140,5 +141,52 @@ class C_Guru extends Controller
             'user'
             // 'groupDitolak'
         ));
+    }
+
+    public function profileGuru()
+    {
+        $user = Auth::user();
+
+        $words = explode(' ', $user->nama);
+        $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+        
+        return view('guru.profile-guru', compact('user', 'initials'));
+    }
+
+    public function updateProfileGuru(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:40',
+            'gelar' => 'nullable|string|max:10',
+            'no_telp' => 'nullable|string|max:15',
+            // 'no_telp' => 'required|regex:/^08[0-9]{8,13}$/', //pake kalo nanti mau lebih ketat
+            'foto' => 'nullable|image|mimes:jpg,png|max:2048'
+        ]);
+
+        $user = Auth::user();
+
+        // upload foto
+        if ($request->hasFile('foto')) {
+            if ($user->foto) {
+                Storage::disk('public')->delete($user->foto);
+            }
+
+            $path = $request->file('foto')->store('foto-profil', 'public');
+            $user->foto = $path;
+        } else if ($request->hapusFoto == 0) {
+            if ($user->foto) {
+                Storage::disk('public')->delete($user->foto);
+            }
+
+            $user->foto = null;
+        }
+        // dd($request);
+
+        $user->nama = $request->nama;
+        $user->gelar = $request->gelar;
+        $user->no_telp = $request->no_telp;
+        $user->save();
+
+        return back()->with('success', 'Profil berhasil diupdate');
     }
 }
