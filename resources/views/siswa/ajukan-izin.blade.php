@@ -71,10 +71,14 @@
                     <div class="form-group">
                         <label>KELAS</label>
                         <select name="kelas" id="kelas" class="@error('kelas') input-error @enderror">
-                            <option value="10" {{ old('kelas', $izin->kelas ?? '') == 10 ? 'selected' : '' }}>X</option>
-                            <option value="11" {{ old('kelas', $izin->kelas ?? '') == 11 ? 'selected' : '' }}>XI</option>
-                            <option value="12" {{ old('kelas', $izin->kelas ?? '') == 12 ? 'selected' : '' }}>XII</option>
-                            <option value="13" {{ old('kelas', $izin->kelas ?? '') == 13 ? 'selected' : '' }}>XIII</option>
+
+                            <option value="">Pilih kelas</option>
+
+                            <option value="10" {{ old('kelas') == 10 ? 'selected' : '' }}>X</option>
+                            <option value="11" {{ old('kelas') == 11 ? 'selected' : '' }}>XI</option>
+                            <option value="12" {{ old('kelas') == 12 ? 'selected' : '' }}>XII</option>
+                            <option value="13" {{ old('kelas') == 13 ? 'selected' : '' }}>XIII</option>
+
                         </select>
                         @error('kelas')
                         <div class="error-text">{{ $message }}</div>

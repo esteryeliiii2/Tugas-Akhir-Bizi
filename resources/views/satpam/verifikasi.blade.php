@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="/css/style.css">
 
 <style>
-/* khusus halaman ini aja */
 .verify-card {
     max-width: 420px;
     margin: auto;
@@ -32,7 +31,6 @@
     font-size: 32px;
 }
 
-/* MOBILE FIX */
 @media (max-width: 768px) {
 
     .content {
@@ -62,21 +60,17 @@
 
 <div class="content">
 
-    <!-- HEADER -->
     <div class="page-header">
         <div class="page-title">Verifikasi Izin</div>
         <div class="page-desc">Lihat surat dan lakukan ACC</div>
     </div>
 
-    <!-- CARD -->
     <div class="card verify-card">
 
-        <!-- ICON -->
         <div style="margin-bottom:20px;">
             <div class="file-icon">📄</div>
         </div>
 
-        <!-- TITLE -->
         <div style="font-weight:600; margin-bottom:8px;">
             Surat Izin
         </div>
@@ -85,21 +79,10 @@
             Klik untuk melihat dokumen
         </div>
 
-        <!-- BUTTON PDF -->
         <a href="/surat/{{ $izin->token }}/pdf" target="_blank" class="btn-primary">
             Buka PDF
         </a>
-
-        <!-- STATUS -->
-        <!-- <div style="margin-top:20px;">
-            @if($izin->status == 10)
-                <div class="badge-status ditolak">SUDAH DIGUNAKAN ❌</div>
-            @else
-                <div class="badge-status disetujui">BELUM DI ACC ✅</div>
-            @endif
-        </div> -->
-
-        <!-- BUTTON ACC -->
+       
         @if($izin->status != 10)
             <div style="margin-top:16px;">
                 <button class="btn-primary" onclick="openModal()">
@@ -112,8 +95,6 @@
 
 </div>
 
-
-<!-- MODAL -->
 <div id="modal" class="modal-overlay">
     <div class="modal-box">
 

@@ -22,6 +22,7 @@ class C_Siswa extends Controller
         //     return redirect()->route('dashboard-guru');
         // }
 
+        $user = Auth::user();
         $izin = Perizinan::where(function ($query) {
             $query->where('penginput', Auth::id())
                 ->orWhere('approver_umum_id', Auth::id())
@@ -41,7 +42,7 @@ class C_Siswa extends Controller
             }
         }
 
-        return view('siswa.dashboard', compact('izin', 'gabisaIzinLagi'));
+        return view('siswa.dashboard', compact('izin', 'gabisaIzinLagi', 'user'));
     }
 
     public function ajukanIzin()

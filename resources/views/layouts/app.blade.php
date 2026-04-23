@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link rel="icon" type="image/png" href="{{ asset('images/LogoBizi.png') }}">
-    <title>Dashboard - Bizi</title>
+    <title>Bizi</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
@@ -33,7 +33,7 @@
                         Beranda Pengajuan
                     </a>
 
-                    @if(in_array($user->jabatan, ['guru bk', 'guru umum']))
+                    @if(in_array(Auth::user()->jabatan, ['guru bk', 'guru umum']))
                     <a href="/daftar-pengajuan" class="{{ request()->is('daftar-pengajuan*') ? 'active' : '' }}">
                         <iconify-icon icon="ph:notification" width="18"></iconify-icon>
                         Daftar Pengajuan
@@ -72,18 +72,23 @@
 
             <div class="sidebar-bottom">
 
-                <a href="{{ $user->jabatan == 'siswa' ? route('profile-siswa') : route('profile-guru') }}" class="user-card-link">
+                <a href="{{ Auth::user()->jabatan == 'siswa' ? route('profile-siswa') : route('profile-guru') }}" class="user-card-link">
                     <div class="user-card">
                         <div class="avatar"
                             style="
-                            @if($user->foto)
+                           @if(Auth::user()->foto)
                                 background-image: url('{{ asset('storage/' . $user->foto) }}');
                                 background-size: cover;
                                 background-position: center;
                             @endif
                             ">
 
-                            @if(!$user->foto)
+                            @if(Auth::user()->foto)
+                            @php
+                            $words = explode(' ', Auth::user()->nama);
+                            $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+                            @endphp
+
                             {{ $initials }}
                             @endif
 
@@ -91,19 +96,15 @@
                         <div class="user-info">
 
                             <div class="user-name">
-                                {{ $user->nama ? $user->nama : 'Nicholas Daniel Raditya' }}
+                                {{ Auth::user()->nama ?? 'Nicholas Daniel Raditya' }}
                             </div>
 
                             <div class="user-meta">
-                                <span class="badge">{{ $user->jabatan ? strtoupper($user->jabatan) : 'SISWA' }}</span>
+                                <span class="badge">
+                                    {{ strtoupper(optional(Auth::user())->jabatan ?? 'siswa') }}
+                                </span>
                                 <span class="nis">
-                                    @if($user->nis)
-                                    {{ $user->nis }}
-                                    @elseif($user->nip)
-                                    {{ $user->nip }}
-                                    @else
-                                    224111999
-                                    @endif
+                                   {{ optional(Auth::user())->nis ?? optional(Auth::user())->nip ?? '224111999' }}
                                 </span>
                             </div>
 

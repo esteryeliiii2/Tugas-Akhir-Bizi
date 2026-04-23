@@ -38,7 +38,7 @@
 
                     <!-- GURU BK -->
                     <div class="guru-card">
-                        <img src="{{ asset('images/guru cewe.png') }}" class="guru-avatar">
+                       <img src="{{ $guruBk->foto ? asset('storage/' . $guruBk->foto) : asset('images/guru cewe.png') }}" class="guru-avatar">
 
                         <div class="guru-info">
                             <div class="guru-badge">
@@ -56,7 +56,7 @@
 
                     <!-- GURU UMUM -->
                     <div class="guru-card">
-                        <img src="{{ asset('images/guru cowo.png') }}" class="guru-avatar">
+                        <img src="{{ $guruUmumFirst->foto ? asset('storage/' . $guruUmumFirst->foto) : asset('images/guru cowo.png') }}" class="guru-avatar">
 
                         <div class="guru-info">
                             <div class="guru-badge">
