@@ -189,4 +189,27 @@ class C_Guru extends Controller
 
         return back()->with('success', 'Profil berhasil diupdate');
     }
+
+    public function viewPasswordGuru()
+    {
+        $user = Auth::user();
+
+        return view('guru.kata-sandi', compact('user'));
+    }
+
+    public function updatePasswordGuru(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', 'min:6']
+        ]);
+
+        $user = Auth::user();
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        // return back()->with('success', 'Password berhasil diubah');
+        return redirect()->route('profile-guru')
+            ->with('success', 'Password berhasil diubah');
+    }
 }

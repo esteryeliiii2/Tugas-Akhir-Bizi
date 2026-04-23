@@ -105,10 +105,10 @@
         </div>
 
         <div class="profil-action">
-            <button type="button" class="btn-secondary" onclick="window.location.href='kata-sandi'">
+            <a class="btn-secondary" href="{{ route('kata_sandi-guru') }}" style="color:black;text-decoration:none">
                 Ubah Kata Sandi
                 <iconify-icon icon="mdi:lock-outline"></iconify-icon>
-            </button>
+            </a>
 
             <button type="submit" class="btn-primary">
                 Simpan Perubahan

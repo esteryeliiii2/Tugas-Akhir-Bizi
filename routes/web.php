@@ -42,6 +42,9 @@ Route::middleware(['auth', 'role:guru umum,guru bk'])->group(function () {
 
     Route::get('/profile-guru', [C_Guru::class, 'profileGuru'])->name('profile-guru');
     Route::post('/profile-guru', [C_Guru::class, 'updateProfileGuru']);
+
+    Route::get('/kata-sandi-guru', [C_Guru::class, 'viewPasswordGuru'])->name('kata_sandi-guru');
+    Route::post('/kata-sandi-guru', [C_Guru::class, 'updatePasswordGuru']);
 });
 
 // PDF Surat Izin
