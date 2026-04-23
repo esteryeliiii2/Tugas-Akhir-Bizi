@@ -22,6 +22,7 @@ class C_Guru extends Controller
                 ->orWhere('approver_bk_id', Auth::id());
         })
             ->whereNotIn('status', [5])
+            ->whereDate('created_at', now())
             ->get();
         // dd($totalIzin);
 
@@ -93,6 +94,7 @@ class C_Guru extends Controller
                 ->orWhere('approver_bk_id', Auth::id());
         })
             ->whereNotIn('status', [5])
+            ->whereDate('created_at', now())
             ->get();
         // dd($totalIzin);
 
