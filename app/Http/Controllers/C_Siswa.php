@@ -27,15 +27,47 @@ class C_Siswa extends Controller
                 ->orWhere('approver_umum_id', Auth::id())
                 ->orWhere('approver_bk_id', Auth::id());
         })
-            ->whereNotIn('status', [5, 10])
+            ->whereNotIn('status', [5])
+            ->whereDate('created_at', now())
             ->latest()
             ->first();
 
-        return view('siswa.dashboard', compact('izin'));
+        $gabisaIzinLagi = false;
+        if ($izin) {
+            if (in_array($izin->status, [0, 1, 2, 5])) {
+                $gabisaIzinLagi = true;
+            } elseif ($izin->status == 10 && !$izin->kembali_lagi) {
+                $gabisaIzinLagi = true;
+            }
+        }
+
+        return view('siswa.dashboard', compact('izin', 'gabisaIzinLagi'));
     }
 
     public function ajukanIzin()
     {
+        $izin = Perizinan::where(function ($query) {
+            $query->where('penginput', Auth::id())
+                ->orWhere('approver_umum_id', Auth::id())
+                ->orWhere('approver_bk_id', Auth::id());
+        })
+            ->whereNotIn('status', [5])
+            ->whereDate('created_at', now())
+            ->latest()
+            ->first();
+        
+        $gabisaIzinLagi = false;
+        if ($izin) {
+            if (in_array($izin->status, [0, 1, 2, 5])) {
+                $gabisaIzinLagi = true;
+            } elseif ($izin->status == 10 && !$izin->kembali_lagi) {
+                $gabisaIzinLagi = true;
+            }
+        }
+
+        if($gabisaIzinLagi) {
+            return redirect()->route('dashboard-siswa');
+        }
         //nanti dibuat cek, jika saat ini udah ada pengajuan maka gabisa ngajuin lagi, selain itu dibuat biar cuma bisa izin dari jam 00:00 - 15.30
         return view('siswa.ajukan-izin');
     }
@@ -106,7 +138,8 @@ class C_Siswa extends Controller
     public function statusIzin()
     {
         $izin = Perizinan::where('penginput', Auth::id())
-            ->whereNotIn('status', [5, 10])
+            ->whereNotIn('status', [5])
+            ->whereDate('created_at', now())
             ->latest()
             ->first();
 
