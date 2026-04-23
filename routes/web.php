@@ -6,6 +6,10 @@ use App\Http\Controllers\C_Siswa;
 use App\Http\Controllers\C_Guru;
 use App\Http\Controllers\SuratController;
 
+Route::get('/surat/{token}', [SuratController::class, 'show']);
+Route::get('/surat/{token}/pdf', [SuratController::class, 'pdf']);
+Route::post('/verifikasi/{token}', [SuratController::class, 'verifikasi']);
+
 //siswa
 Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::get('/', [C_Siswa::class, 'index']);
@@ -15,6 +19,8 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::post('/ajukan-izin', [C_Siswa::class, 'storeSession'])->name('store_session-siswa');
     Route::post('/guru-approve', [C_Siswa::class, 'store'])->name('store-siswa');
     Route::get('/guru-approve', [C_Siswa::class, 'guruApprove'])->name('guru_approve-siswa');
+
+    Route::get('/edit-izin/{id}', [C_Siswa::class, 'editIzin'])->name('edit-izin-siswa');
 
     Route::get('/status-izin', [C_Siswa::class, 'statusIzin'])->name('status_izin-siswa');
     Route::post('/batal', [C_Siswa::class, 'batal'])->name('batal-siswa');
@@ -47,9 +53,6 @@ Route::middleware(['auth', 'role:guru umum,guru bk'])->group(function () {
     Route::post('/kata-sandi-guru', [C_Guru::class, 'updatePasswordGuru']);
 });
 
-// PDF Surat Izin
-Route::get('/surat-izin', [SuratController::class, 'preview'])->name('surat.preview');
-Route::get('/surat-izin/pdf', [SuratController::class, 'pdf'])->name('surat.pdf');
 
 Route::middleware('auth')->group(function () {
 
@@ -63,4 +66,3 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/surat-izin/{id}', [C_Siswa::class, 'downloadPDF'])->name('surat-izin');

@@ -27,6 +27,10 @@
         <form action="{{ route('store_session-siswa') }}" method="POST">
             @csrf
 
+            @if(isset($izin))
+            <input type="hidden" name="id_izin" value="{{ $izin->id }}">
+            @endif
+
             <div class="form-card">
 
                 <div class="card-header-box">
@@ -35,36 +39,52 @@
                 </div>
                 <div class="form-group">
                     <label>NAMA</label>
-                    <input type="text" name="nama" placeholder="Masukkan nama lengkap">
+                    <input type="text" name="nama"
+                        value="{{ old('nama', $izin->nama ?? '') }}"
+                        placeholder="Masukkan nama lengkap"
+                        class="@error('nama') input-error @enderror">
+
+                    @error('nama')
+                    <div class="error-text">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-row">
 
                     <div class="form-group">
                         <label>NO. URUT</label>
-                        <select name="no_presensi">
+                        <select name="no_presensi" class="@error('no_presensi') input-error @enderror">
                             <option value="">Pilih no. urut</option>
                             @for ($i = 1; $i <= 36; $i++)
-                                <option value="{{ $i }}">{{ $i }}</option>
+                                <option value="{{ $i }}"
+                                {{ old('no_presensi', $izin->no_presensi ?? '') == $i ? 'selected' : '' }}>
+                                {{ $i }}
+                                </option>
                                 @endfor
                         </select>
+
+                        @error('no_presensi')
+                        <div class="error-text">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <label>KELAS</label>
-                        <select name="kelas" id="kelas">
-                            <option value="">Pilih kelas</option>
-                            <option value="10">X</option>
-                            <option value="11">XI</option>
-                            <option value="12">XII</option>
-                            <option value="13">XIII</option>
+                        <select name="kelas" id="kelas" class="@error('kelas') input-error @enderror">
+                            <option value="10" {{ old('kelas', $izin->kelas ?? '') == 10 ? 'selected' : '' }}>X</option>
+                            <option value="11" {{ old('kelas', $izin->kelas ?? '') == 11 ? 'selected' : '' }}>XI</option>
+                            <option value="12" {{ old('kelas', $izin->kelas ?? '') == 12 ? 'selected' : '' }}>XII</option>
+                            <option value="13" {{ old('kelas', $izin->kelas ?? '') == 13 ? 'selected' : '' }}>XIII</option>
                         </select>
+                        @error('kelas')
+                        <div class="error-text">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <label>JURUSAN</label>
                         <select name="jurusan" id="jurusan">
-                            <option>Pilih jurusan</option>
+                            <option value="">Pilih jurusan</option>
                         </select>
                     </div>
 
@@ -82,12 +102,14 @@
 
                 <div class="toggle-group">
                     <label class="toggle-item">
-                        <input type="radio" name="kembali" value="ya" checked>
+                        <input type="radio" name="kembali" value="ya"
+                            {{ old('kembali', $izin->kembali_lagi ?? true) ? 'checked' : '' }}>
                         <span class="custom-radio"></span>
                         Kembali ke sekolah
                     </label>
                     <label class="toggle-item">
-                        <input type="radio" name="kembali" value="tidak">
+                        <input type="radio" name="kembali" value="tidak"
+                            {{ old('kembali', $izin->kembali_lagi ?? true) ? '' : 'checked' }}>
                         <span class="custom-radio"></span>
                         Tidak kembali
                     </label>
@@ -95,7 +117,14 @@
 
                 <div class="form-group">
                     <label>KEPERLUAN</label>
-                    <textarea placeholder="Sebutkan keperluan izin..." name="keperluan"></textarea>
+                    <textarea
+                        name="keperluan"
+                        placeholder="Contoh: Izin ke dokter karena sakit"
+                        class="@error('keperluan') input-error @enderror">{{ old('keperluan', $izin->keperluan ?? '') }}</textarea>
+
+                    @error('keperluan')
+                    <div class="error-text">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-row">
@@ -103,16 +132,24 @@
                     <div class="form-group">
                         <label>JAM MULAI IZIN</label>
                         <div class="time-input">
-                            <input type="time" name="jam_mulai">
+                            <input type="time" name="jam_mulai"
+                                value="{{ old('jam_mulai', isset($izin->jam_mulai) ? $izin->jam_mulai->format('H:i') : '') }}">
                             <iconify-icon icon="solar:clock-circle-linear" class="time-icon"></iconify-icon>
+                            @error('jam_mulai')
+                            <div class="error-text">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="form-group" id="container-jam-kembali">
                         <label>JAM SELESAI IZIN</label>
                         <div class="time-input">
-                            <input type="time" name="jam_selesai">
+                            <input type="time" name="jam_selesai"
+                                value="{{ old('jam_selesai', isset($izin->jam_selesai) ? $izin->jam_selesai->format('H:i') : '') }}">
                             <iconify-icon icon="solar:clock-circle-linear" class="time-icon"></iconify-icon>
+                            @error('jam_selesai')
+                            <div class="error-text">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -185,10 +222,11 @@
     const kelasSelect = document.getElementById('kelas');
     const jurusanSelect = document.getElementById('jurusan');
 
-    kelasSelect.addEventListener('change', function() {
-        const selectedKelas = this.value;
+    // ambil value lama (edit / old)
+    const oldKelas = "{{ old('kelas', $izin->kelas ?? '') }}";
+    const oldJurusan = "{{ old('jurusan', $izin->jurusan ?? '') }}";
 
-        // reset jurusan
+    function loadJurusan(selectedKelas, selectedJurusan = null) {
         jurusanSelect.innerHTML = '<option value="">Pilih jurusan</option>';
 
         if (jurusanMap[selectedKelas]) {
@@ -196,36 +234,91 @@
                 const option = document.createElement('option');
                 option.value = jurusan;
                 option.textContent = jurusan;
+
+                // set selected kalau edit
+                if (jurusan === selectedJurusan) {
+                    option.selected = true;
+                }
+
                 jurusanSelect.appendChild(option);
             });
         }
+    }
+
+    // saat user ganti kelas
+    kelasSelect.addEventListener('change', function() {
+        loadJurusan(this.value);
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // 1. Cari radio button-nya
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // 🔥 AUTO LOAD SAAT EDIT
+        if (oldKelas) {
+            kelasSelect.value = oldKelas;
+            loadJurusan(oldKelas, oldJurusan);
+        }
+
+        // =====================
+        // TOGGLE JAM KEMBALI
+        // =====================
         const radioKembali = document.querySelectorAll('input[name="kembali"]');
-        // 2. Cari kontainer jam selesai yang tadi kita kasih ID
         const containerJamSelesai = document.getElementById('container-jam-kembali');
 
-        // 3. Fungsi untuk cek kondisi
         function toggleJamInput() {
-            // Cari mana yang sedang dipilih (checked)
             const selectedValue = document.querySelector('input[name="kembali"]:checked').value;
-            
+
             if (selectedValue === 'tidak') {
-                containerJamSelesai.style.display = 'none'; // Sembunyikan
+                containerJamSelesai.style.display = 'none';
             } else {
-                containerJamSelesai.style.display = 'block'; // Munculkan
+                containerJamSelesai.style.display = 'block';
             }
         }
 
-        // 4. Jalankan fungsi setiap kali ada perubahan klik
         radioKembali.forEach(radio => {
             radio.addEventListener('change', toggleJamInput);
         });
 
-        // 5. Jalankan saat halaman pertama kali dibuka (biar sinkron)
         toggleJamInput();
+    });
+
+    // =====================
+    // REMOVE ERROR STYLE
+    // =====================
+    const inputs = document.querySelectorAll('input, select, textarea');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            input.classList.remove('input-error');
+
+            const errorText = input.closest('.form-group')?.querySelector('.error-text');
+            if (errorText) errorText.remove();
+        });
+
+        input.addEventListener('change', () => {
+            input.classList.remove('input-error');
+
+            const errorText = input.closest('.form-group')?.querySelector('.error-text');
+            if (errorText) errorText.remove();
+        });
+    });
+
+    // =====================
+    // SELECT STYLE
+    // =====================
+    const selects = document.querySelectorAll('select');
+
+    selects.forEach(select => {
+        if (select.value !== "") {
+            select.classList.add('selected');
+        }
+
+        select.addEventListener('change', () => {
+            if (select.value !== "") {
+                select.classList.add('selected');
+            } else {
+                select.classList.remove('selected');
+            }
+        });
     });
 </script>
 @endsection

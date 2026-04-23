@@ -29,7 +29,7 @@ class C_Siswa extends Controller
         })
             ->whereNotIn('status', [5])
             ->whereDate('created_at', now())
-            ->latest()
+            ->latest('updated_at')
             ->first();
 
         $gabisaIzinLagi = false;
@@ -53,9 +53,9 @@ class C_Siswa extends Controller
         })
             ->whereNotIn('status', [5])
             ->whereDate('created_at', now())
-            ->latest()
+            ->latest('updated_at')
             ->first();
-        
+
         $gabisaIzinLagi = false;
         if ($izin) {
             if (in_array($izin->status, [0, 1, 2, 5])) {
@@ -65,11 +65,11 @@ class C_Siswa extends Controller
             }
         }
 
-        if($gabisaIzinLagi) {
+        if ($gabisaIzinLagi) {
             return redirect()->route('dashboard-siswa');
         }
         //nanti dibuat cek, jika saat ini udah ada pengajuan maka gabisa ngajuin lagi, selain itu dibuat biar cuma bisa izin dari jam 00:00 - 15.30
-        return view('siswa.ajukan-izin');
+        return view('siswa.ajukan-izin', compact('izin'));
     }
 
     public function guruApprove()
@@ -97,8 +97,28 @@ class C_Siswa extends Controller
 
     public function storeSession(Request $request)
     {
-        session(['izin_data' => $request->all()]); //simpen dulu di session
-        // dd(session()->all());
+        $request->validate([
+            'nama' => 'required|string|max:100',
+            'no_presensi' => 'required',
+            'kelas' => 'required',
+            'jurusan' => 'required',
+            'keperluan' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'nullable|after:jam_mulai',
+        ], [
+            'nama.required' => 'Nama wajib diisi',
+            'no_presensi.required' => 'Nomor urut wajib dipilih',
+            'kelas.required' => 'Kelas wajib dipilih',
+            'jurusan.required' => 'Jurusan wajib dipilih',
+            'keperluan.required' => 'Keperluan wajib diisi',
+            'jam_mulai.required' => 'Jam mulai wajib diisi',
+            'jam_selesai.after' => 'Jam selesai harus setelah jam mulai',
+        ]);
+
+        session([
+            'izin_data' => $request->except('_token', 'id_izin'),
+            'id_izin' => $request->id_izin
+        ]);
 
         return redirect()->route('guru_approve-siswa');
     }
@@ -113,8 +133,12 @@ class C_Siswa extends Controller
 
         $kembali_lagi = ($data['kembali'] == 'ya') ? true : false;
 
-        // gabung data step 1 + step 2
-        $finalData = array_merge($data, [
+        $finalData = [
+            'nama' => $data['nama'],
+            'no_presensi' => $data['no_presensi'],
+            'kelas' => $data['kelas'],
+            'jurusan' => $data['jurusan'],
+            'keperluan' => $data['keperluan'],
             'approver_umum_id' => $request->id_guru_umum,
             'approver_umum' => $request->nama_guru_umum,
             'approver_bk_id' => $request->id_guru_bk,
@@ -122,15 +146,32 @@ class C_Siswa extends Controller
             'penginput' => Auth::id(),
             'kembali_lagi' => $kembali_lagi,
             'status' => 0,
+            'alasan_reject' => null,
             'jam_mulai' => Carbon::today()->setTimeFromTimeString($data['jam_mulai']),
-            'jam_selesai' => $data['jam_selesai'] ? Carbon::today()->setTimeFromTimeString($data['jam_selesai']) : null,
-        ]);
+            'jam_selesai' => $data['jam_selesai']
+                ? Carbon::today()->setTimeFromTimeString($data['jam_selesai'])
+                : null,
+        ];
 
-        // dd($finalData); //sementara biar ga kepush kalo ga sengaja
+        $id_izin = session('id_izin');
 
-        Perizinan::create($finalData);
+        if ($id_izin) {
 
-        session()->forget('izin_data'); //ni hapus session yg sementara
+            $izin = Perizinan::where('id', $id_izin)
+                ->where('penginput', Auth::id())
+                ->firstOrFail();
+
+            if (!in_array($izin->status, [3, 4])) {
+                abort(403);
+            }
+
+            $izin->update($finalData);
+        } else {
+            Perizinan::create($finalData);
+        }
+
+        session()->forget('izin_data');
+        session()->forget('id_izin');
 
         return redirect()->route('status_izin-siswa');
     }
@@ -140,10 +181,27 @@ class C_Siswa extends Controller
         $izin = Perizinan::where('penginput', Auth::id())
             ->whereNotIn('status', [5])
             ->whereDate('created_at', now())
-            ->latest()
+            ->latest('updated_at')
             ->first();
 
-        return view('siswa.status-izin', compact('izin'));
+        $guruBk = null;
+        $guruUmum = null;
+
+        if ($izin) {
+            $guruBk = User::find($izin->approver_bk_id);
+            $guruUmum = User::find($izin->approver_umum_id);
+        }
+
+        return view('siswa.status-izin', compact('izin', 'guruBk', 'guruUmum'));
+    }
+
+    public function editIzin($id)
+    {
+        $izin = Perizinan::where('id', $id)
+            ->where('penginput', Auth::id())
+            ->firstOrFail();
+
+        return view('siswa.ajukan-izin', compact('izin'));
     }
 
     public function batal(Request $request)
@@ -165,8 +223,9 @@ class C_Siswa extends Controller
         $semuaIzin = Perizinan::where(function ($query) {
             $query->where('penginput', Auth::id());
         })
-            ->whereNotIn('status', [0, 1, 2, 5])
+            ->where('status', 10)
             ->orderBy('created_at', 'desc')
+            ->limit(10)
             ->get();
 
         // mapping status
@@ -192,7 +251,7 @@ class C_Siswa extends Controller
 
     public function downloadPDF($id)
     {
-        \Carbon\Carbon::setLocale('id'); 
+        \Carbon\Carbon::setLocale('id');
         $izin = Perizinan::findOrFail($id);
         $pdf = Pdf::loadView('pdf.surat-izin', compact('izin'));
         return $pdf->stream('Surat_Izin_' . $izin->nama . '.pdf');
@@ -204,7 +263,7 @@ class C_Siswa extends Controller
 
         $words = explode(' ', $user->nama);
         $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
-        
+
         return view('siswa.profile-siswa', compact('user', 'initials'));
     }
 

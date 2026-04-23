@@ -391,6 +391,15 @@ a.card {
     margin-bottom: 20px;
 }
 
+.form-card-reject {
+    width: 300px;
+    background: #fcfcfc;
+    border: 1px solid #ebebeb;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
 .card-header-box {
     display: inline-flex;
     width: 100%;
@@ -648,9 +657,15 @@ input::placeholder {
     color: #9c9c9c;
 }
 
+.sisi-kanan {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
 /* css step kanan urutan */
 .izin-steps {
-    width: 328px;
+    width: 300px;
     background: #fcfcfc;
     border: 1px solid #ececec;
     border-radius: 16px;
@@ -1325,10 +1340,85 @@ input::placeholder {
     transition: 0.2s;
 }
 
+.btn-qr-code {
+    background: #fcfcfc;
+    color: #121212;
+    border: 1px solid #e8e8e8;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .btn-batal-izin:hover {
     background: #e8e8e8;
 }
 
+.btn-qr-code:hover {
+    background: #e8e8e8;
+}
+
+.input-error {
+    border: 1px solid #c30d0d !important;
+}
+
+.error-text {
+    font-size: 12px;
+    color: #c30d0d;
+    margin-top: 6px;
+}
+
+select {
+    color: #9c9c9c;
+}
+
+select.selected {
+    color: #121212;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+    border: 1px solid #b1b1b1;
+    outline: none;
+    /* box-shadow: 0 0 0 2px rgba(18, 18, 18, 0.1); */
+}
+
+.popup-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    z-index: 9999;
+    animation: slideIn 0.3s ease;
+}
+
+.popup-alert.success {
+    background: #22c55e;
+}
+
+.popup-alert.error {
+    background: #ef4444;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
 /* dashboard guru */
 
 /* TOPBAR */
@@ -1865,7 +1955,7 @@ input::placeholder {
     margin-bottom: 6px;
 }
 
-.ubah-profile{
+.ubah-profile {
     background: #fcfcfc;
     color: #121212;
     border: 1px solid #e8e8e8;
@@ -1878,9 +1968,9 @@ input::placeholder {
     margin-right: 4px;
 }
 
-.hapus-profile{
+.hapus-profile {
     background: #fcfcfc;
-    color: #CE0000;
+    color: #ce0000;
     border: 1px solid #e8e8e8;
     padding: 6px 12px;
     border-radius: 8px;
@@ -1890,8 +1980,7 @@ input::placeholder {
     margin-bottom: 6px;
 }
 
-
-.card-profil{
+.card-profil {
     flex: 1;
     border-radius: 16px;
     gap: 32px;
@@ -1926,8 +2015,8 @@ input::placeholder {
 
 .value-profil {
     width: 100%;
-    background: #FCFCFC;
-    border: 1px solid #EDEDED;
+    background: #fcfcfc;
+    border: 1px solid #ededed;
     padding: 10px 14px;
     border-radius: 8px;
     font-size: 14px;
@@ -1940,7 +2029,7 @@ input::placeholder {
     border: 1px solid #e8e8e8;
     padding: 10px 14px;
     border-radius: 8px;
-    font-size: 14px;;
+    font-size: 14px;
 }
 
 .avatar-profile {
@@ -1968,7 +2057,7 @@ input::placeholder {
     border-radius: 10px;
     font-size: 13px;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .btn-primary {
@@ -1979,7 +2068,7 @@ input::placeholder {
     border-radius: 10px;
     font-size: 13px;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .password-group {

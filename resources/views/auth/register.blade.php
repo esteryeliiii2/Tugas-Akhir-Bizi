@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Login - Bizi</title>
@@ -22,7 +23,7 @@
             height: 100vh;
         }
 
-         .left {
+        .left {
             flex: 1;
             background: linear-gradient(180deg, #0176F4 0%, #01C3F4 140%);
             border-radius: 16px;
@@ -33,7 +34,7 @@
             align-items: center;
         }
 
-        .left-content{
+        .left-content {
             width: 100%;
             display: flex;
             justify-content: center;
@@ -55,13 +56,13 @@
             width: 420px;
         }
 
-       .logo {
+        .logo {
             text-align: center;
             margin-bottom: 10px;
         }
 
         .logo img {
-            width: 60px;   
+            width: 60px;
             height: auto;
         }
 
@@ -127,19 +128,25 @@
             margin-bottom: 60px;
         }
 
+        .error-text {
+            font-size: 12px;
+            color: #C30D0D;
+            margin-top: 6px;
+        }
+
         input {
             width: 100%;
             padding: 12px;
             border-radius: 12px;
             font-size: 16px;
-            color: #9C9C9C;
+            color: #121212;
             border: 1px solid #E8E8E8;
             background: #F4F4F4;
         }
 
-          input:focus {
-            border: 1px solid #9c9c9c; 
-            outline: none; 
+        input:focus {
+            border: 1px solid #9c9c9c;
+            outline: none;
         }
 
         .forgot {
@@ -159,7 +166,7 @@
         }
 
         .btn-login {
-           flex: 1;
+            flex: 1;
             padding: 12px;
             border-radius: 16px;
             border: 1px solid #E8E8E8;
@@ -193,78 +200,95 @@
                 flex: 1;
             }
         }
-
     </style>
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-     <div class="left">
-        <div class="left-content">
-            <img src="{{ asset('images/tampilan.png') }}" alt="Tampilan">
-        </div>
-    </div>
-
-    <div class="right">
-        <div class="login-box">
-
-            <div class="logo">
-                <img src="{{ asset('images/LogoBizi.png') }}" alt="Logo Bizi">
+        <div class="left">
+            <div class="left-content">
+                <img src="{{ asset('images/tampilan.png') }}" alt="Tampilan">
             </div>
-
-            <h1>Selamat datang di Bizi</h1>
-            <div class="subtitle">Buat akun terlebih dahulu</div>
-
-            <form method="POST" action="{{ route('register') }}">
-                @csrf
-
-                <div class="input-all">
-                    <div class="input-group">
-                        <label>NAMA</label>
-                        <input type="text" name="nama" placeholder="Masukkan nama lengkap" autocomplete="off">
-                    </div>
-
-                    <div class="input-group">
-                        <label>NIS</label>
-                        <input type="text" name="nis" placeholder="Masukkan NIS" autocomplete="off">
-                    </div>
-
-                    <div class="input-group">
-                        <label>EMAIL</label>
-                        <input type="text" name="email" placeholder="Masukkan email" autocomplete="off">
-                    </div>
-
-                    <div class="input-group" style="margin-bottom: 0px;">
-                        <label>KATA SANDI</label>
-                        <input type="password" name="password" placeholder="Masukkan kata sandi" autocomplete="new-password">
-                    </div>
-                </div>
-
-                <div class="btn-group">
-                    <button type="submit" class="btn-register">Daftar</button>
-                    <a href="{{ route('login') }}" class="btn-login">
-                        Sudah Punya Akun
-                    </a>
-                </div>
-
-            </form>
-
         </div>
+
+        <div class="right">
+            <div class="login-box">
+
+                <div class="logo">
+                    <img src="{{ asset('images/LogoBizi.png') }}" alt="Logo Bizi">
+                </div>
+
+                <h1>Selamat datang di Bizi</h1>
+                <div class="subtitle">Buat akun terlebih dahulu</div>
+
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <div class="input-all">
+                        <div class="input-group">
+                            <label>NAMA</label>
+                            <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Masukkan nama lengkap">
+
+                            @error('nama')
+                            <div class="error-text">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="input-group">
+                            <label>NIS</label>
+                            <input type="text" name="nis" value="{{ old('nis') }}" placeholder="Masukkan NIS">
+
+                            @error('nis')
+                            <div class="error-text">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="input-group">
+                            <label>EMAIL</label>
+                            <input type="text" name="email" value="{{ old('email') }}" placeholder="Masukkan email">
+
+                            @error('email')
+                            <div class="error-text">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="input-group" style="margin-bottom: 0px;">
+                            <label>KATA SANDI</label>
+                            <input type="password" name="password" placeholder="Masukkan kata sandi">
+
+                            @error('password')
+                            <div class="error-text">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn-register">Daftar</button>
+                        <a href="{{ route('login') }}" class="btn-login">
+                            Sudah Punya Akun
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
     </div>
 
-</div>
+    <script>
+        const buttons = document.querySelectorAll('.role-btn');
 
-<script>
-    const buttons = document.querySelectorAll('.role-btn');
-
-    buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            buttons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>

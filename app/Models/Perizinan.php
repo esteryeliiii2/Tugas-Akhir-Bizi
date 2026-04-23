@@ -25,6 +25,7 @@ class Perizinan extends Model
         'approver_umum_id',
         'approver_bk_id',
         'alasan_reject',
+        'token'
     ];
 
     protected $casts = [

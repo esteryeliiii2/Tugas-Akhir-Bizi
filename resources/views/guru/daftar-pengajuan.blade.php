@@ -2,20 +2,17 @@
 
 @section('content')
 
-{{-- @php
-$dataIzin = [
-[
-'nama' => 'Nicholas Daniel Raditya',
-'kelas' => 'XIII (13)',
-'no_presensi' => '27',
-'jurusan' => 'SIJA',
-'keperluan' => 'cap 3 jari ijazah SMP di SMPN 1 Semarang',
-'jam' => '11:00 - 13:00',
-'guru_bk' => 'Retno Yolanda, S.Pd.',
-'guru_umum' => 'Agus Setyawan, S.Pd.'
-]
-];
-@endphp --}}
+@if(session('success'))
+<div class="popup-alert success">
+    {{ session('success') }}
+</div>
+@endif
+
+@if(session('error'))
+<div class="popup-alert error">
+    {{ session('error') }}
+</div>
+@endif
 
 
 <div class="page-header" style="margin-bottom: 24px;">
@@ -639,9 +636,28 @@ $dataIzin = [
         const tabs = document.querySelectorAll('.tab');
         const items = document.querySelectorAll('.section-item');
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const filter = urlParams.get('filter') || 'all';
+
+        tabs.forEach(tab => {
+            if (tab.getAttribute('data-filter') === filter) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+
+        items.forEach(item => {
+            if (filter === 'all') {
+                item.style.display = '';
+            } else {
+                item.style.display =
+                    item.getAttribute('data-status') === filter ? '' : 'none';
+            }
+        });
+
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-
                 tabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
 
@@ -652,9 +668,7 @@ $dataIzin = [
                         item.style.display = '';
                     } else {
                         item.style.display =
-                            item.getAttribute('data-status') === filter ?
-                            '' :
-                            'none';
+                            item.getAttribute('data-status') === filter ? '' : 'none';
                     }
                 });
             });
@@ -684,12 +698,7 @@ $dataIzin = [
         }
 
         function setujuiIzin() {
-            alert("Pengajuan disetujui!");
             closeModalSetuju();
-        }
-
-        function closeModalCatatan() {
-            document.getElementById("modal-catatan").style.display = "none";
         }
 
         function submitTolak() {
@@ -700,10 +709,17 @@ $dataIzin = [
                 return;
             }
 
-            alert("Pengajuan ditolak dengan alasan:\n" + catatan);
-
             closeModalCatatan();
         }
+
+        function closeModalCatatan() {
+            document.getElementById("modal-catatan").style.display = "none";
+        }
+
+        setTimeout(() => {
+            const popup = document.querySelector('.popup-alert');
+            if (popup) popup.remove();
+        }, 3000);
 
         window.openModalTolak = openModalTolak;
         window.closeModalTolak = closeModalTolak;

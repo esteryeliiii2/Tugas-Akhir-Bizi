@@ -25,7 +25,7 @@
         Pelajari cara mengajukan izin di BIZI dengan langkah yang cepat dan mudah.
     </div>
 
-    <button class="banner-btn">
+    <button class="banner-btn" onclick="window.location.href='/tutorial-izin'">
         Lihat Tutorial
         <iconify-icon icon="ion:play" width="16"></iconify-icon>
     </button>
@@ -125,9 +125,9 @@
                     @if (in_array($izin->status, [0,1]))
                     <iconify-icon icon="mdi:clock"></iconify-icon>
                     @elseif (in_array($izin->status, [3,4]))
-                    <iconify-icon icon="mdi:clock"></iconify-icon>
+                    <iconify-icon icon="material-symbols:cancel-rounded" style="color: #F24141;"></iconify-icon>
                     @elseif (in_array($izin->status, [2,10]))
-                    <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #1DB366;"></iconify-icon>
+                    <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #3e5047;"></iconify-icon>
                     @endif
                 </div>
 
@@ -146,9 +146,9 @@
                             @elseif ($izin->status == 2)
                             Perizinan Telah Disetujui
                             @elseif ($izin->status == 3)
-                            Perizinan Telah Ditolak oleh Guru Kelas
+                            Pengajuan Izin Ditolak oleh Guru Umum
                             @elseif ($izin->status == 4)
-                            Perizinan Telah Ditolak oleh Guru BK
+                            Pengajuan Izin Ditolak oleh Guru BK
                             @elseif ($izin->status == 10)
                             Verifikasi QR Code Berhasil
                             @endif
@@ -159,15 +159,15 @@
                             <img src="{{ asset('images/guru cowo.png') }}">
                             <span>
                                 @if ($izin->status == 0)
-                                    {{ $izin->approver_umum }}
+                                {{ $izin->approver_umum }}
                                 @elseif ($izin->status == 1)
-                                    {{ $izin->approver_bk }}
+                                {{ $izin->approver_bk }}
                                 @elseif ($izin->status == 2)
-                                    {{ $izin->approver_bk }}
+                                {{ $izin->approver_bk }}
                                 @elseif ($izin->status == 3)
-                                    {{ $izin->approver_umum }}
+                                {{ $izin->approver_umum }}
                                 @elseif ($izin->status == 4)
-                                    {{ $izin->approver_bk }}
+                                {{ $izin->approver_bk }}
                                 @endif
                             </span>
                         </div>

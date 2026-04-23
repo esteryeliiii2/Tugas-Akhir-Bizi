@@ -260,7 +260,7 @@
                         </div>
 
                         <div class="forgot">
-                            <a href="#">Lupa kata sandi?</a>
+                            <!-- <a href="#">Lupa kata sandi?</a> -->
                         </div>
                     </div>
 

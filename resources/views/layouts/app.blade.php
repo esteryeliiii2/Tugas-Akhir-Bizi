@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="icon" type="image/png" href="{{ asset('images/LogoBizi.png') }}">
     <title>Dashboard - Bizi</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
@@ -33,25 +34,25 @@
                     </a>
 
                     @if(in_array($user->jabatan, ['guru bk', 'guru umum']))
-                        <a href="/daftar-pengajuan" class="{{ request()->is('daftar-pengajuan*') ? 'active' : '' }}">
-                            <iconify-icon icon="ph:notification" width="18"></iconify-icon>
-                            Daftar Pengajuan
-                        </a>
+                    <a href="/daftar-pengajuan" class="{{ request()->is('daftar-pengajuan*') ? 'active' : '' }}">
+                        <iconify-icon icon="ph:notification" width="18"></iconify-icon>
+                        Daftar Pengajuan
+                    </a>
 
-                        <a href="/riwayat-izin-guru" class="{{ request()->is('riwayat-izin-guru') ? 'active' : '' }}">
-                            <iconify-icon icon="solar:history-linear" width="18"></iconify-icon>
-                            Riwayat Izin
-                        </a>
+                    <a href="/riwayat-izin-guru" class="{{ request()->is('riwayat-izin-guru') ? 'active' : '' }}">
+                        <iconify-icon icon="solar:history-linear" width="18"></iconify-icon>
+                        Riwayat Izin
+                    </a>
                     @else
-                        <a href="/status-izin" class="{{ request()->is('status-izin*') ? 'active' : '' }}">
-                            <iconify-icon icon="ph:notification" width="18"></iconify-icon>
-                            Status Perizinan
-                        </a>
+                    <a href="/status-izin" class="{{ request()->is('status-izin*') ? 'active' : '' }}">
+                        <iconify-icon icon="ph:notification" width="18"></iconify-icon>
+                        Status Perizinan
+                    </a>
 
-                        <a href="/riwayat-izin-siswa" class="{{ request()->is('riwayat-izin-siswa') ? 'active' : '' }}">
-                            <iconify-icon icon="solar:history-linear" width="18"></iconify-icon>
-                            Riwayat Izin
-                        </a>
+                    <a href="/riwayat-izin-siswa" class="{{ request()->is('riwayat-izin-siswa') ? 'active' : '' }}">
+                        <iconify-icon icon="solar:history-linear" width="18"></iconify-icon>
+                        Riwayat Izin
+                    </a>
 
                     <div class="submenu">
 
@@ -63,8 +64,8 @@
                         </a>
 
                     </div>
-                
-                @endif
+
+                    @endif
 
                 </div>
             </div>
@@ -81,9 +82,9 @@
                                 background-position: center;
                             @endif
                             ">
-                            
+
                             @if(!$user->foto)
-                                {{ $initials }}
+                            {{ $initials }}
                             @endif
 
                         </div>
@@ -97,11 +98,11 @@
                                 <span class="badge">{{ $user->jabatan ? strtoupper($user->jabatan) : 'SISWA' }}</span>
                                 <span class="nis">
                                     @if($user->nis)
-                                        {{ $user->nis }}
+                                    {{ $user->nis }}
                                     @elseif($user->nip)
-                                        {{ $user->nip }}
+                                    {{ $user->nip }}
                                     @else
-                                        224111999
+                                    224111999
                                     @endif
                                 </span>
                             </div>

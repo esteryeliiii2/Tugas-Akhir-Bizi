@@ -31,16 +31,25 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'nama' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'min:6'], //'confirmed kalo pake pw confirmation
-            'nis' => ['nullable', 'string', 'max:30', 'unique:'.User::class],
-            'nip' => ['nullable', 'string', 'max:30', 'unique:'.User::class],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'min:6'],
+            'nis' => ['nullable', 'string', 'max:30', 'unique:users,nis'],
+            'nip' => ['nullable', 'string', 'max:30', 'unique:users,nip'],
+        ], [
+            'nama.required' => 'Nama wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah digunakan',
+            'password.required' => 'Kata sandi wajib diisi',
+            'password.min' => 'Kata sandi minimal 6 karakter',
+            'nis.unique' => 'NIS sudah digunakan',
+            'nip.unique' => 'NIP sudah digunakan',
         ]);
-        
-        if (!$request->nis && !$request->nip) {
+
+        if (empty($request->nis) && empty($request->nip)) {
             return back()->withErrors([
-                'nis' => 'Isi NIS atau NIP',
-            ]);
+                'nis' => 'Silakan isi NIS atau NIP',
+            ])->withInput();
         }
 
         $jabatan = $request->nis ? 'siswa' : 'guru umum';

@@ -2,20 +2,17 @@
 
 @section('content')
 
-@php
-// $dataIzin = [
-// [
-// 'nama' => 'Nicholas Daniel Raditya',
-// 'kelas' => 'XIII (13)',
-// 'no_urut' => '27',
-// 'jurusan' => 'SIJA',
-// 'keperluan' => 'cap 3 jari ijazah SMP di SMPN 1 Semarang',
-// 'jam' => '11:00 - 13:00',
-// 'guru_bk' => 'Retno Yolanda, S.Pd.',
-// 'guru_umum' => 'Agus Setyawan, S.Pd.'
-// ]
-// ];
-@endphp
+@if(session('success'))
+<div class="popup-alert success">
+    {{ session('success') }}
+</div>
+@endif
+
+@if(session('error'))
+<div class="popup-alert error">
+    {{ session('error') }}
+</div>
+@endif
 
 <div class="topbar">
 
@@ -48,8 +45,10 @@
         <hr class="line-guru">
 
         <div class="card-link">
-            <span>Lihat semua</span>
-            <span>→</span>
+            <a href="{{ route('daftar-pengajuan-guru', ['filter' => 'all']) }}" class="card-link">
+                <span>Lihat semua</span>
+                <span>→</span>
+            </a>
         </div>
     </div>
 
@@ -67,8 +66,10 @@
         <hr class="line-guru">
 
         <div class="card-link">
-            <span>Lihat semua</span>
-            <span>→</span>
+            <a href="{{ route('daftar-pengajuan-guru', ['filter' => 'disetujui']) }}" class="card-link">
+                <span>Lihat semua</span>
+                <span>→</span>
+            </a>
         </div>
     </div>
 
@@ -86,8 +87,10 @@
         <hr class="line-guru">
 
         <div class="card-link">
-            <span>Lihat semua</span>
-            <span>→</span>
+            <a href="{{ route('daftar-pengajuan-guru', ['filter' => 'ditolak']) }}" class="card-link">
+                <span>Lihat semua</span>
+                <span>→</span>
+            </a>
         </div>
     </div>
 
@@ -127,12 +130,15 @@
         <div class="action">
             <button type="button" class="btn-tolak" onclick="event.stopPropagation(); openModalTolak('{{ $izin->id }}')">Tolak ✕</button>
             <button type="button" class="btn-setuju" onclick="event.stopPropagation(); openModalSetuju('{{ $izin->id }}')">Setujui ✓</button>
-            <span class="arrow" id="arrow-{{ $index }}" style="transform: rotate(180deg);">⌄</span>
+            <span class="arrow" id="arrow-{{ $index }}"
+                style="transform: {{ $index == 0 ? 'rotate(180deg)' : 'rotate(0deg)' }};">
+                ⌄
+            </span>
         </div>
     </div>
 
     <!-- BODY -->
-    <div class="card-body" id="card-{{ $index }}">
+    <div class="card-body" id="card-{{ $index }}" style="{{ $index == 0 ? 'display:block;' : 'display:none;' }}">
 
         <hr class="line-data">
 
@@ -365,17 +371,22 @@
     function toggleCard(el) {
         const index = el.getAttribute('data-index');
 
-        const card = document.getElementById('card-' + index);
-        const arrow = document.getElementById('arrow-' + index);
+        const allCards = document.querySelectorAll('.card-body');
+        const allArrows = document.querySelectorAll('.arrow');
 
-        const isHidden = window.getComputedStyle(card).display === "none";
+        const currentCard = document.getElementById('card-' + index);
+        const currentArrow = document.getElementById('arrow-' + index);
 
-        if (isHidden) {
-            card.style.display = "block";
-            arrow.style.transform = "rotate(180deg)";
-        } else {
-            card.style.display = "none";
-            arrow.style.transform = "rotate(0deg)";
+        const isOpen = currentCard.style.display === "block";
+
+        // tutup semua dulu
+        allCards.forEach(card => card.style.display = "none");
+        allArrows.forEach(arrow => arrow.style.transform = "rotate(0deg)");
+
+        // kalau tadi belum terbuka → buka
+        if (!isOpen) {
+            currentCard.style.display = "block";
+            currentArrow.style.transform = "rotate(180deg)";
         }
     }
 
@@ -402,13 +413,12 @@
         document.getElementById("modal-setuju").style.display = "none";
     }
 
-    function setujuiIzin() {
-        alert("Pengajuan disetujui!");
-        closeModalSetuju();
-    }
-
     function closeModalCatatan() {
         document.getElementById("modal-catatan").style.display = "none";
+    }
+
+    function setujuiIzin() {
+        closeModalSetuju();
     }
 
     function submitTolak() {
@@ -419,10 +429,13 @@
             return;
         }
 
-        alert("Pengajuan ditolak dengan alasan:\n" + catatan);
-
         closeModalCatatan();
     }
+
+    setTimeout(() => {
+        const popup = document.querySelector('.popup-alert');
+        if (popup) popup.remove();
+    }, 3000);
 
     window.openModalTolak = openModalTolak;
     window.closeModalTolak = closeModalTolak;
@@ -434,4 +447,28 @@
 
     window.closeModalCatatan = closeModalCatatan;
     window.submitTolak = submitTolak;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const filter = "{{ $filter ?? 'all' }}";
+
+        const tabs = document.querySelectorAll('.tab');
+        const items = document.querySelectorAll('.section-item');
+
+        tabs.forEach(tab => {
+            if (tab.getAttribute('data-filter') === filter) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+
+        items.forEach(item => {
+            if (filter === 'all') {
+                item.style.display = '';
+            } else {
+                item.style.display =
+                    item.getAttribute('data-status') === filter ? '' : 'none';
+            }
+        });
+    });
 </script>

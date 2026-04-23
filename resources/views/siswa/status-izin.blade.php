@@ -53,10 +53,12 @@ $izin = true;
             <div class="form-card">
                 <div class="izin-left-2">
                     <div class="izin-icon">
-                        @if (in_array($izin->status, [2, 10]))
-                        <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #1DB366;"></iconify-icon>
-                        @else
+                        @if (in_array($izin->status, [0,1]))
                         <iconify-icon icon="mdi:clock"></iconify-icon>
+                        @elseif (in_array($izin->status, [3,4]))
+                        <iconify-icon icon="material-symbols:cancel-rounded" style="color: #F24141;"></iconify-icon>
+                        @elseif (in_array($izin->status, [2,10]))
+                        <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #3e5047;"></iconify-icon>
                         @endif
                     </div>
 
@@ -76,9 +78,9 @@ $izin = true;
                                     @elseif ($izin->status == 2)
                                     Perizinan Telah Disetujui
                                     @elseif ($izin->status == 3)
-                                    Perizinan Telah Ditolak oleh Guru Kelas
+                                    Pengajuan Izin Ditolak oleh Guru Kelas
                                     @elseif ($izin->status == 4)
-                                    Perizinan Telah Ditolak oleh Guru BK
+                                    Pengajuan Izin Ditolak oleh Guru BK
                                     @elseif ($izin->status == 10)
                                     Verifikasi QR Code Berhasil
                                     @endif
@@ -169,7 +171,9 @@ $izin = true;
                         <div class="row">
                             <label>GURU BK</label>
                             <div class="value guru">
-                                <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                                <img
+                                    src="{{ $guruBk && $guruBk->foto ? asset('storage/'.$guruBk->foto) : asset('images/default.png') }}"
+                                    class="foto-guru">
                                 <span>{{ $izin->approver_bk }}</span>
                             </div>
                         </div>
@@ -177,7 +181,9 @@ $izin = true;
                         <div class="row">
                             <label>GURU UMUM</label>
                             <div class="value guru small">
-                                <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                                <img
+                                    src="{{ $guruUmum && $guruUmum->foto ? asset('storage/'.$guruUmum->foto) : asset('images/default.png') }}"
+                                    class="foto-guru">
                                 <span>{{ $izin->approver_umum }}</span>
                             </div>
                         </div>
@@ -186,15 +192,19 @@ $izin = true;
                     <div class="btn-wrapper">
                         @if ($izin->status == 2)
                         {{-- Tombol Lihat QR Code (Hanya muncul jika status 2) --}}
-                        <button class="btn-lihat-qr" onclick="openModalQR()" style="background: #1DB366; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                            <iconify-icon icon="solar:qr-code-bold-duotone" style="font-size: 20px;"></iconify-icon>
+                        <button class="btn-qr-code" onclick="openModalQR()">
                             Lihat QR Code
+                            <iconify-icon icon="uil:qrcode-scan"></iconify-icon>
                         </button>
                         @elseif (in_array($izin->status, [0, 1]))
-                        {{-- Tombol Batalkan (Hanya muncul jika status 0 atau 1) --}}
                         <button class="btn-batal-izin" onclick="openModal()">
                             Batalkan Pengajuan
                         </button>
+
+                        @elseif (in_array($izin->status, [3,4]))
+                        <a href="{{ route('edit-izin-siswa', $izin->id) }}" class="btn-batal-izin">
+                            Edit Pengajuan
+                        </a>
                         @endif
                     </div>
 
@@ -202,41 +212,92 @@ $izin = true;
             </div>
         </div>
 
-        <!-- STEP KANAN -->
-        <div class="izin-steps">
+        <div class="sisi-kanan">
+            <div class="izin-steps">
 
-            <div class="step active">
-                <div class="step-number">{{ in_array($izin->status, [0,1,2,3,4,10]) ? '✓' : '1' }}</div>
-                <div>
-                    <div class="step-title">Isi Formulir Perizinan</div>
-                    <p>Lengkapi formulir pengajuan izin dengan data dan alasan yang jelas.</p>
+                <div class="step active">
+                    <div class="step-number">{{ in_array($izin->status, [0,1,2,3,4,10]) ? '✓' : '1' }}</div>
+                    <div>
+                        <div class="step-title">Isi Formulir Perizinan</div>
+                        <p>Lengkapi formulir pengajuan izin dengan data dan alasan yang jelas.</p>
+                    </div>
                 </div>
+
+                <div class="step {{ in_array($izin->status, [0,1,2,3,4,10]) ? 'active' : '' }}">
+                    <div class="step-number">
+                        @if($izin->status == 3)
+                        ✕
+                        @elseif(in_array($izin->status, [1,2,4,10]))
+                        ✓
+                        @else
+                        2
+                        @endif
+                    </div>
+                    <div>
+                        <div class="step-title">Persetujuan Guru Kelas (Umum)</div>
+                        <p>Pengajuan izin akan ditinjau terlebih dahulu oleh guru kelas.</p>
+                    </div>
+                </div>
+
+                <div class="step {{ in_array($izin->status, [1,2,4,10]) ? 'active' : '' }}">
+                    <div class="step-number">
+                        @if($izin->status == 4)
+                        ✕
+                        @elseif(in_array($izin->status, [2,10]))
+                        ✓
+                        @else
+                        3
+                        @endif
+                    </div>
+                    <div>
+                        <div class="step-title">Persetujuan Guru BK</div>
+                        <p>Pengajuan izin akan ditinjau dan diverifikasi oleh guru BK.</p>
+                    </div>
+                </div>
+
+                <div class="step {{ in_array($izin->status, [2,10]) ? 'active' : '' }}">
+                    <div class="step-number">{{ $izin->status == 10 ? '✓' : '4' }}</div>
+                    <div>
+                        <div class="step-title">Verifikasi QR Code</div>
+                        <p>Verifikasi ke satpam dengan QR code yang berisi surat izin yang valid.</p>
+                    </div>
+                </div>
+
+
+
             </div>
 
-            <div class="step {{ in_array($izin->status, [0,1,2,3,4,10]) ? 'active' : '' }}">
-                <div class="step-number">{{ in_array($izin->status, [1,2,4,10]) ? '✓' : '2' }}</div>
-                <div>
-                    <div class="step-title">Persetujuan Guru Kelas (Umum)</div>
-                    <p>Pengajuan izin akan ditinjau terlebih dahulu oleh guru kelas.</p>
-                </div>
-            </div>
+            @if(in_array($izin->status, [3,4]))
+            <div class="form-card-reject">
 
-            <div class="step {{ in_array($izin->status, [1,2,4,10]) ? 'active' : '' }}">
-                <div class="step-number">{{ in_array($izin->status, [2,10]) ? '✓' : '3' }}</div>
-                <div>
-                    <div class="step-title">Persetujuan Guru BK</div>
-                    <p>Pengajuan izin akan ditinjau dan diverifikasi oleh guru BK.</p>
+                <div class="card-header-box">
+                    <span class="card-title" style="color: #F24141;">Catatan dari Guru</span>
                 </div>
-            </div>
 
-            <div class="step {{ in_array($izin->status, [2,10]) ? 'active' : '' }}">
-                <div class="step-number">{{ $izin->status == 10 ? '✓' : '4' }}</div>
-                <div>
-                    <div class="step-title">Verifikasi QR Code</div>
-                    <p>Verifikasi ke satpam dengan QR code yang berisi surat izin yang valid.</p>
+                <div class="card-content">
+                    <p style="color:#7c7c7c; margin-bottom:16px; font-size: 14px;">
+                        Pengajuan izin ditolak. Berikut alasan dari guru :
+                    </p>
+
+                    <div style=" background:#FCFCFC; border: 1px solid #E8E8E8; padding:12px; border-radius: 12px; margin-bottom:12px; font-size: 14px;">
+                        {{ $izin->alasan_reject }}
+                    </div>
+
+                    <div class="value guru small" style="font-size: 12px; border-radius: 12px; padding: 8px 12px;">
+                        <img
+                            src="{{ $izin->status == 3 
+                    ? ($guruUmum && $guruUmum->foto ? asset('storage/'.$guruUmum->foto) : asset('images/default.png')) 
+                    : ($guruBk && $guruBk->foto ? asset('storage/'.$guruBk->foto) : asset('images/default.png')) }}"
+                            class="foto-guru">
+
+                        <span>
+                            {{ $izin->status == 3 ? $izin->approver_umum : $izin->approver_bk }}
+                        </span>
+                    </div>
                 </div>
-            </div>
 
+            </div>
+            @endif
         </div>
 
     </div>
@@ -286,14 +347,14 @@ $izin = true;
     <div class="modal-box">
         <span class="modal-close" onclick="closeModalQR()">✕</span>
         <h2 class="modal-title">QR Code Perizinan</h2>
-        <p class="modal-desc">Tunjukkan QR Code ini kepada Satpam untuk diverifikasi.</p>
+        <p class="modal-desc" style="margin-bottom: 0px;">Tunjukkan QR Code ini kepada Satpam untuk diverifikasi.</p>
+
+        @php
+        $url = env('APP_URL') . '/surat/' . $izin->token;
+        @endphp
 
         <div class="qr-display" style="margin: 20px 0; text-align: center;">
-            {!! QrCode::size(200)->generate(route('surat-izin', $izin->id)) !!}
-        </div>
-
-        <div class="modal-actions">
-            <button type="button" class="btn-kembali" onclick="closeModalQR()" style="width: 100%;">Tutup</button>
+            {!! QrCode::size(200)->generate($url) !!}
         </div>
     </div>
 </div>

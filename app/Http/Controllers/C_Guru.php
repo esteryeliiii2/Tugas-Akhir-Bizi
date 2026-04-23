@@ -8,6 +8,7 @@ use App\Models\Perizinan;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class C_Guru extends Controller
 {
@@ -19,7 +20,7 @@ class C_Guru extends Controller
             $query->where('penginput', Auth::id())
                 ->orWhere('approver_umum_id', Auth::id())
                 ->orWhere('approver_bk_id', Auth::id());
-            })
+        })
             ->whereNotIn('status', [5])
             ->get();
         // dd($totalIzin);
@@ -51,7 +52,6 @@ class C_Guru extends Controller
             'jenis' => 'required|in:0,1',
             'catatanPenolakan' => 'nullable'
         ]);
-        dd($request);
 
         $izin = Perizinan::where('id', $request->id)
             ->where(function ($query) {
@@ -60,33 +60,38 @@ class C_Guru extends Controller
             })
             ->firstOrFail();
 
-        // 0 = tolak, 1 = setujui
         if ($request->jenis == 1) {
-            $izin->update([
-                'status' => 1
-            ]);
 
-            $pesan = 'Pengajuan berhasil disetujui';
+            if ($izin->status == 0) {
+                $izin->update(['status' => 1]);
+            } elseif ($izin->status == 1) {
+                $izin->update([
+                    'status' => 2,
+                    'token' => Str::random(40)
+                ]);
+            }
+
+            return back()->with('success', 'Pengajuan berhasil disetujui');
         } else {
+
             $izin->update([
                 'status' => 3,
                 'alasan_reject' => $request->catatanPenolakan
             ]);
 
-            $pesan = 'Pengajuan berhasil ditolak';
+            return back()->with('error', 'Pengajuan berhasil ditolak');
         }
-
-        return redirect()->back()->with('success', $pesan);
     }
 
     public function daftarPengajuan()
     {
+        $filter = $request->filter ?? 'all';
         $user = Auth::user();
         $semuaIzin = Perizinan::where(function ($query) {
             $query->where('penginput', Auth::id())
                 ->orWhere('approver_umum_id', Auth::id())
                 ->orWhere('approver_bk_id', Auth::id());
-            })
+        })
             ->whereNotIn('status', [5])
             ->get();
         // dd($totalIzin);
@@ -101,12 +106,14 @@ class C_Guru extends Controller
             $pengajuanDitolak = $semuaIzin->whereIn('status', [4]);
         }
 
+        // $filter = request('filter'); 
         return view('guru.daftar-pengajuan', compact(
             'semuaIzin',
             'pengajuanMenunggu',
             'pengajuanDisetujui',
             'pengajuanDitolak',
-            'user'
+            'user',
+            'filter'
         ));
     }
 
@@ -114,12 +121,13 @@ class C_Guru extends Controller
     {
         $user = Auth::user();
         $semuaIzin = Perizinan::where(function ($query) {
-                $query->where('penginput', Auth::id())
-                    ->orWhere('approver_umum_id', Auth::id())
-                    ->orWhere('approver_bk_id', Auth::id());
-            })
-            ->whereNotIn('status', [0, 1, 2, 5])
+            $query->where('penginput', Auth::id())
+                ->orWhere('approver_umum_id', Auth::id())
+                ->orWhere('approver_bk_id', Auth::id());
+        })
+            ->where('status', 10)
             ->orderBy('created_at', 'desc')
+            ->limit(10)
             ->get();
 
         // mapping status
@@ -149,7 +157,7 @@ class C_Guru extends Controller
 
         $words = explode(' ', $user->nama);
         $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
-        
+
         return view('guru.profile-guru', compact('user', 'initials'));
     }
 
@@ -185,6 +193,7 @@ class C_Guru extends Controller
         $user->nama = $request->nama;
         $user->gelar = $request->gelar;
         $user->no_telp = $request->no_telp;
+        // dd(get_class($user));
         $user->save();
 
         return back()->with('success', 'Profil berhasil diupdate');

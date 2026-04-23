@@ -133,12 +133,27 @@
             margin-bottom: 40px;
         }
 
+        input::placeholder {
+            color: #9C9C9C;
+        }
+
+        .input-error {
+            border: 1px solid #C30D0D !important;
+            /* background: #fff5f5; */
+        }
+
+        .error-text {
+            font-size: 12px;
+            color: #C30D0D;
+            margin-top: 6px;
+        }
+
         input {
             width: 100%;
             padding: 12px;
             border-radius: 12px;
             font-size: 16px;
-            color: #9C9C9C;
+            color: #121212;
             border: 1px solid #E8E8E8;
             background: #F4F4F4;
         }
@@ -249,20 +264,37 @@
                     @csrf
 
                     <div class="input-all">
-                        <input type="hidden" name="login_type" id="login_type" value="nis">
-                        <input type="hidden" name="role" id="role" value="siswa">
+                        <input type="hidden" name="login_type" id="login_type" value="{{ old('login_type', 'nis') }}">
+                        <input type="hidden" name="role" id="role" value="{{ old('role', 'siswa') }}">
                         <div class="input-group">
                             <label id="label-login">NIS</label>
-                            <input type="text" name="login" id="login-input" placeholder="Masukkan NIS" autocomplete="off">
-                        </div>
+                            <input
+                                type="text"
+                                name="login"
+                                id="login-input"
+                                placeholder="Masukkan NIS"
+                                autocomplete="off"
+                                class="@error('login') input-error @enderror">
 
+                            @error('login')
+                            <div class="error-text">{{ $message }}</div>
+                            @enderror
+                        </div>
                         <div class="input-group" style="margin-bottom: 16px;">
                             <label>KATA SANDI</label>
-                            <input type="password" name="password" placeholder="Masukkan kata sandi" autocomplete="new-password">
-                        </div>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Masukkan kata sandi"
+                                autocomplete="new-password"
+                                class="@error('password') input-error @enderror">
 
+                            @error('password')
+                            <div class="error-text">{{ $message }}</div>
+                            @enderror
+                        </div>
                         <div class="forgot">
-                            <a href="#">Lupa kata sandi?</a>
+                            <!-- <a href="#">Lupa kata sandi?</a> -->
                         </div>
                     </div>
 
@@ -285,6 +317,29 @@
         const label = document.getElementById('label-login');
         const input = document.getElementById('login-input');
         const loginType = document.getElementById('login_type');
+        const roleInput = document.getElementById('role');
+
+        function setRole(role) {
+            if (role === 'siswa') {
+                label.innerText = 'NIS';
+                input.placeholder = 'Masukkan NIS';
+                loginType.value = 'nis';
+                roleInput.value = 'siswa';
+                document.getElementById('btn-register').style.display = 'block';
+            } else {
+                label.innerText = 'NIP';
+                input.placeholder = 'Masukkan NIP';
+                loginType.value = 'nip';
+
+                if (role === 'guru_bk') {
+                    roleInput.value = 'guru_bk';
+                } else {
+                    roleInput.value = 'guru_umum';
+                }
+
+                document.getElementById('btn-register').style.display = 'none';
+            }
+        }
 
         buttons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -292,30 +347,46 @@
                 btn.classList.add('active');
 
                 const role = btn.getAttribute('data-role');
+                setRole(role);
 
-                if (role === 'siswa') {
-                    label.innerText = 'NIS';
-                    input.placeholder = 'Masukkan NIS';
-                    loginType.value = 'nis';
-                    document.getElementById('role').value = 'siswa';
-                    document.getElementById('btn-register').style.display = 'block';
+                input.value = '';
+
+                document.querySelectorAll('.input-error').forEach(el => {
+                    el.classList.remove('input-error');
+                });
+
+                document.querySelectorAll('.error-text').forEach(el => {
+                    el.remove();
+                });
+            });
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedRole = roleInput.value; // dari old()
+
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-role') === savedRole) {
+                    btn.classList.add('active');
+                    setRole(savedRole);
                 } else {
-                    label.innerText = 'NIP';
-                    input.placeholder = 'Masukkan NIP';
-                    loginType.value = 'nip';
-                    if (role === 'guru_bk') {
-                        document.getElementById('role').value = 'guru bk';
-                    } else {
-                        document.getElementById('role').value = 'guru umum';
-                    }
-                    document.getElementById('btn-register').style.display = 'none';
+                    btn.classList.remove('active');
                 }
+            });
+        });
 
-                input.value = ''; // reset biar ga salah input
+        const inputs = document.querySelectorAll('input');
+
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                input.classList.remove('input-error');
+
+                const errorText = input.parentElement.querySelector('.error-text');
+                if (errorText) {
+                    errorText.remove();
+                }
             });
         });
     </script>
-
 </body>
 
 </html>
