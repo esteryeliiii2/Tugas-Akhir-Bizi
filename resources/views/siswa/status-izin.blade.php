@@ -57,8 +57,10 @@ $izin = true;
                         <iconify-icon icon="mdi:clock"></iconify-icon>
                         @elseif (in_array($izin->status, [3,4]))
                         <iconify-icon icon="material-symbols:cancel-rounded" style="color: #F24141;"></iconify-icon>
-                        @elseif (in_array($izin->status, [2,10]))
+                        @elseif (in_array($izin->status, [2]))
                         <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #3e5047;"></iconify-icon>
+                        @elseif (in_array($izin->status, [10]))
+                        <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #1DB366;"></iconify-icon>
                         @endif
                     </div>
 

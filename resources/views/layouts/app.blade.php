@@ -77,13 +77,13 @@
                         <div class="avatar"
                             style="
                            @if(Auth::user()->foto)
-                                background-image: url('{{ asset('storage/' . $user->foto) }}');
+                                background-image: url('{{ asset('storage/' . Auth::user()->foto) }}');
                                 background-size: cover;
                                 background-position: center;
                             @endif
                             ">
 
-                            @if(Auth::user()->foto)
+                            @if(!Auth::user()->foto)
                             @php
                             $words = explode(' ', Auth::user()->nama);
                             $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));

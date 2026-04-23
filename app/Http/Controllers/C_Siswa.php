@@ -34,15 +34,24 @@ class C_Siswa extends Controller
             ->first();
 
         $gabisaIzinLagi = false;
+        $guruBk = [];
+        $guruUmum = [];
         if ($izin) {
             if (in_array($izin->status, [0, 1, 2, 5])) {
                 $gabisaIzinLagi = true;
             } elseif ($izin->status == 10 && !$izin->kembali_lagi) {
                 $gabisaIzinLagi = true;
             }
+            $queryBk = User::where('jabatan', 'guru bk');
+            $queryBk->where('jurusan', Auth::user()->jurusan);
+            $queryUmum = User::where('jabatan', 'guru umum');
+    
+            $guruBk = $queryBk->get()->first();
+            $guruUmum = $queryUmum->where('id', $izin->approver_umum_id)->get()->first();
         }
 
-        return view('siswa.dashboard', compact('izin', 'gabisaIzinLagi', 'user'));
+
+        return view('siswa.dashboard', compact('izin', 'gabisaIzinLagi', 'user', 'guruBk', 'guruUmum'));
     }
 
     public function ajukanIzin()
@@ -231,22 +240,29 @@ class C_Siswa extends Controller
 
         // mapping status
         $izinData = $semuaIzin->whereIn('status', [3, 4, 10]);
-        // $izinDitolak   = $semuaIzin->whereIn('status', [3, 4]);
 
-        // grouping by tanggal
+        $guruBk = [];
+        $guruUmum = [];
+
+        $allGuru = [];
+        if ($izinData) {
+            $allGuru = User::whereIn(
+                'id',
+                $izinData->pluck('approver_umum_id')
+                    ->merge($izinData->pluck('approver_bk_id'))
+                    ->unique()
+            )->get()->keyBy('id');
+        }
+
         \Carbon\Carbon::setLocale('id');
 
         $groupData = $izinData->groupBy(function ($item) {
             return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
         });
 
-        // $groupDitolak = $izinDitolak->groupBy(function ($item) {
-        //     return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
-        // });
-
         return view('siswa.riwayat-izin-siswa', compact(
             'groupData',
-            // 'groupDitolak'
+            'allGuru'
         ));
     }
 

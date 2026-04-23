@@ -5,7 +5,7 @@
 <div class="topbar">
 
     <div>
-        <div class="greeting">Halo, {{ $user->nama ? $user->nama : 'Nicholas' }} 👋</div>
+        <div class="greeting">Halo, {{ Auth::user()->nama ? Auth::user()->nama : 'Nicholas' }} 👋</div>
         <div class="title">Mau mengajukan izin hari ini?</div>
     </div>
 
@@ -126,8 +126,10 @@
                     <iconify-icon icon="mdi:clock"></iconify-icon>
                     @elseif (in_array($izin->status, [3,4]))
                     <iconify-icon icon="material-symbols:cancel-rounded" style="color: #F24141;"></iconify-icon>
-                    @elseif (in_array($izin->status, [2,10]))
+                    @elseif (in_array($izin->status, [2]))
                     <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #3e5047;"></iconify-icon>
+                    @elseif (in_array($izin->status, [10]))
+                    <iconify-icon icon="solar:check-circle-bold-duotone" style="color: #1DB366;"></iconify-icon>
                     @endif
                 </div>
 
@@ -154,21 +156,23 @@
                             @endif
                         </div>
 
-                        @if ($izin->status !== 10)
+                        @if (in_array($izin->status, [0,3,10]))
                         <div class="izin-user">
-                            <img src="{{ asset('images/guru cowo.png') }}">
+                            <img
+                                src="{{ $guruUmum && $guruUmum->foto ? asset('storage/'.$guruUmum->foto) : asset('images/default.png') }}"
+                                class="foto-guru">
                             <span>
-                                @if ($izin->status == 0)
                                 {{ $izin->approver_umum }}
-                                @elseif ($izin->status == 1)
+                            </span>
+                        </div>
+                        @endif
+                        @if (in_array($izin->status, [1,2,4,10]))
+                        <div class="izin-user">
+                            <img
+                                src="{{ $guruBk && $guruBk->foto ? asset('storage/'.$guruBk->foto) : asset('images/default.png') }}"
+                                class="foto-guru">
+                            <span>
                                 {{ $izin->approver_bk }}
-                                @elseif ($izin->status == 2)
-                                {{ $izin->approver_bk }}
-                                @elseif ($izin->status == 3)
-                                {{ $izin->approver_umum }}
-                                @elseif ($izin->status == 4)
-                                {{ $izin->approver_bk }}
-                                @endif
                             </span>
                         </div>
                         @endif

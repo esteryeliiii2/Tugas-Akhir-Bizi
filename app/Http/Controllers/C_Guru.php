@@ -37,12 +37,24 @@ class C_Guru extends Controller
             $pengajuanDitolak = $izin->where('status', 4)->count();
         }
 
+        $allUser = [];
+        if ($izin) {
+            $allUser = User::whereIn(
+                'id',
+                $izin->pluck('approver_umum_id')
+                    ->merge($izin->pluck('approver_bk_id'))
+                    ->merge($izin->pluck('penginput'))
+                    ->unique()
+            )->get()->keyBy('id');
+        }
+
         return view('guru.dashboard-guru', compact(
             'dataIzin',
             'totalPengajuan',
             'pengajuanDisetujui',
             'pengajuanDitolak',
-            'user'
+            'user',
+            'allUser'
         ));
     }
 
@@ -108,6 +120,17 @@ class C_Guru extends Controller
             $pengajuanDitolak = $semuaIzin->whereIn('status', [4]);
         }
 
+        $allUser = [];
+        if ($semuaIzin) {
+            $allUser = User::whereIn(
+                'id',
+                $semuaIzin->pluck('approver_umum_id')
+                    ->merge($semuaIzin->pluck('approver_bk_id'))
+                    ->merge($semuaIzin->pluck('penginput'))
+                    ->unique()
+            )->get()->keyBy('id');
+        }
+
         // $filter = request('filter'); 
         return view('guru.daftar-pengajuan', compact(
             'semuaIzin',
@@ -115,7 +138,8 @@ class C_Guru extends Controller
             'pengajuanDisetujui',
             'pengajuanDitolak',
             'user',
-            'filter'
+            'filter',
+            'allUser'
         ));
     }
 
@@ -139,6 +163,17 @@ class C_Guru extends Controller
             $izinData = $semuaIzin->whereIn('status', [4, 10]);
         }
 
+        $allUser = [];
+        if ($semuaIzin) {
+            $allUser = User::whereIn(
+                'id',
+                $semuaIzin->pluck('approver_umum_id')
+                    ->merge($semuaIzin->pluck('approver_bk_id'))
+                    ->merge($semuaIzin->pluck('penginput'))
+                    ->unique()
+            )->get()->keyBy('id');
+        }
+
         // grouping by tanggal
         \Carbon\Carbon::setLocale('id');
 
@@ -148,8 +183,8 @@ class C_Guru extends Controller
 
         return view('guru.riwayat-izin-guru', compact(
             'groupData',
-            'user'
-            // 'groupDitolak'
+            'user',
+            'allUser'
         ));
     }
 

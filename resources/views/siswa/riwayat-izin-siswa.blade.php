@@ -118,21 +118,27 @@
                                     @endif
                                 </div>
 
+                                @if (in_array($izin->status, [3,10]))
+                                @php
+                                    $guruUmum = $allGuru[$izin->approver_umum_id] ?? null;
+                                @endphp
                                 <div class="izin-user">
-                                    <img src="{{ asset('images/guru cowo.png') }}">
+                                    <img
+                                        src="{{ $guruUmum && $guruUmum->foto ? asset('storage/'.$guruUmum->foto) : asset('images/default.png') }}"
+                                        class="foto-guru">
                                     <span>
-                                        @if ($izin->status == 3)
                                         {{ $izin->approver_umum }}
-                                        @elseif ($izin->status == 4)
-                                        {{ $izin->approver_bk }}
-                                        @elseif ($izin->status == 10)
-                                        {{ $izin->approver_umum }}
-                                        @endif
                                     </span>
                                 </div>
-                                @if ($izin->status == 10)
+                                @endif
+                                @if (in_array($izin->status, [4,10]))
+                                @php
+                                    $guruBk = $allGuru[$izin->approver_bk_id] ?? null;
+                                @endphp
                                 <div class="izin-user">
-                                    <img src="{{ asset('images/guru cewe.png') }}">
+                                    <img
+                                        src="{{ $guruBk && $guruBk->foto ? asset('storage/'.$guruBk->foto) : asset('images/default.png') }}"
+                                        class="foto-guru">
                                     <span>
                                         {{ $izin->approver_bk }}
                                     </span>
@@ -157,7 +163,9 @@
                             data-bk="{{ $izin->approver_bk }}"
                             data-umum="{{ $izin->approver_umum }}"
                             data-tanggal="{{ $izin->created_at->format('d M Y, H:i') }} WIB"
-                            data-status="{{ $izin->status }}">
+                            data-status="{{ $izin->status }}"
+                            data-foto_bk="{{ $guruBk && $guruBk->foto ? asset('storage/'.$guruBk->foto) : asset('images/guru cewe.png') }}"
+                            data-foto_umum="{{ $guruUmum && $guruUmum->foto ? asset('storage/'.$guruUmum->foto) : asset('images/guru cowo.png') }}">
                             Lihat Detail
                         </a>
                         <iconify-icon icon="mdi:dots-vertical"></iconify-icon>
@@ -337,7 +345,7 @@
                         <div class="row">
                             <label>GURU BK</label>
                             <div class="value guru">
-                                <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                                <img id="detail-foto-bk" src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
                                 <span id="detail-bk"></span>
                             </div>
                         </div>
@@ -345,7 +353,7 @@
                         <div class="row">
                             <label>GURU UMUM</label>
                             <div class="value guru small">
-                                <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                                <img id="detail-foto-umum" src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
                                 <span id="detail-umum"></span>
                             </div>
                         </div>
@@ -420,6 +428,9 @@
             // GURU
             document.getElementById("detail-bk").innerText = d.bk;
             document.getElementById("detail-umum").innerText = d.umum;
+            
+            document.getElementById("detail-foto-bk").src = d.foto_bk || "/images/guru cewe.png";
+            document.getElementById("detail-foto-umum").src = d.foto_umum || "/images/guru cowo.png";
 
             // SHOW POPUP
             document.getElementById("popup-detail").style.display = "flex";

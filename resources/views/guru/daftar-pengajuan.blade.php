@@ -49,8 +49,12 @@
         <div class="card-header-izin" data-index="menunggu-{{ $index }}" onclick="toggleCard(this)">
 
             <div class="left-header">
-
-                <img src="{{ asset('images/profile.png') }}" class="avatar">
+                @php
+                    $siswa = $allUser[$izin->penginput] ?? null;
+                @endphp
+                <img 
+                    src="{{ $siswa && $siswa->foto ? asset('storage/'.$siswa->foto) : asset('images/profile.png') }}" 
+                    class="avatar">
 
                 <div>
                     <div class="tanggal">
@@ -159,8 +163,13 @@
                         <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
                             GURU BK
                         </label>
+                        @php
+                            $guruBk = $allUser[$izin->approver_bk_id] ?? null;
+                        @endphp
                         <div class="value guru">
-                            <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                            <img
+                                src="{{ $guruBk && $guruBk->foto ? asset('storage/'.$guruBk->foto) : asset('images/guru cewe.png') }}"
+                                class="foto-guru">
                             <span>{{ $izin->approver_bk }}</span>
                         </div>
                     </div>
@@ -169,8 +178,13 @@
                         <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
                             GURU UMUM
                         </label>
+                        @php
+                            $guruUmum = $allUser[$izin->approver_umum_id] ?? null;
+                        @endphp
                         <div class="value guru small">
-                            <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                            <img
+                                src="{{ $guruUmum && $guruUmum->foto ? asset('storage/'.$guruUmum->foto) : asset('images/guru cowo.png') }}"
+                                class="foto-guru">
                             <span>{{ $izin->approver_umum }}</span>
                         </div>
                     </div>
@@ -201,8 +215,12 @@
         <div class="card-header-izin" data-index="izin-{{ $index }}" onclick="toggleCard(this)">
 
             <div class="left-header">
-
-                <img src="{{ asset('images/profile.png') }}" class="avatar">
+                @php
+                    $siswa = $allUser[$izin->penginput] ?? null;
+                @endphp
+                <img 
+                    src="{{ $siswa && $siswa->foto ? asset('storage/'.$siswa->foto) : asset('images/profile.png') }}" 
+                    class="avatar">
 
                 <div>
                     <div class="tanggal">
@@ -310,8 +328,13 @@
                         <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
                             GURU BK
                         </label>
+                        @php
+                            $guruBk = $allUser[$izin->approver_bk_id] ?? null;
+                        @endphp
                         <div class="value guru">
-                            <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                            <img
+                                src="{{ $guruBk && $guruBk->foto ? asset('storage/'.$guruBk->foto) : asset('images/guru cewe.png') }}"
+                                class="foto-guru">
                             <span>{{ $izin->approver_bk }}</span>
                         </div>
                     </div>
@@ -320,8 +343,13 @@
                         <label style="color: #b1b1b1; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
                             GURU UMUM
                         </label>
+                        @php
+                            $guruUmum = $allUser[$izin->approver_umum_id] ?? null;
+                        @endphp
                         <div class="value guru small">
-                            <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                            <img
+                                src="{{ $guruUmum && $guruUmum->foto ? asset('storage/'.$guruUmum->foto) : asset('images/guru cowo.png') }}"
+                                class="foto-guru">
                             <span>{{ $izin->approver_umum }}</span>
                         </div>
                     </div>
@@ -352,8 +380,12 @@
         <div class="card-header-izin" data-index="ditolak-{{ $index }}" onclick="toggleCard(this)">
 
             <div class="left-header">
-
-                <img src="{{ asset('images/profile.png') }}" class="avatar">
+                @php
+                    $siswa = $allUser[$izin->penginput] ?? null;
+                @endphp
+                <img 
+                    src="{{ $siswa && $siswa->foto ? asset('storage/'.$siswa->foto) : asset('images/profile.png') }}" 
+                    class="avatar">
 
                 <div>
                     <div class="tanggal">{{ $izin->created_at->format('d M Y, H:i') }} WIB</div>
@@ -460,7 +492,12 @@
                             GURU BK
                         </label>
                         <div class="value guru">
-                            <img src="{{ asset('images/guru cewe.png') }}" class="foto-guru">
+                            @php
+                                $guruBk = $allUser[$izin->approver_bk_id] ?? null;
+                            @endphp
+                            <img
+                                src="{{ $guruBk && $guruBk->foto ? asset('storage/'.$guruBk->foto) : asset('images/guru cewe.png') }}"
+                                class="foto-guru">
                             <span>{{ $izin['approver_bk'] }}</span>
                         </div>
                     </div>
@@ -470,7 +507,12 @@
                             GURU UMUM
                         </label>
                         <div class="value guru small">
-                            <img src="{{ asset('images/guru cowo.png') }}" class="foto-guru">
+                            @php
+                                $guruUmum = $allUser[$izin->approver_umum_id] ?? null;
+                            @endphp
+                            <img
+                                src="{{ $guruUmum && $guruUmum->foto ? asset('storage/'.$guruUmum->foto) : asset('images/guru cowo.png') }}"
+                                class="foto-guru">
                             <span>{{ $izin['approver_umum'] }}</span>
                         </div>
                     </div>
